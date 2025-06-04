@@ -23,13 +23,6 @@ class RoleSeeder extends Seeder
             'user.update',
             'user.delete',
 
-            // orders
-            'order.list',
-            'order.create',
-            'order.read',
-            'order.update',
-            'order.delete',
-
             // products
             'product.list',
             'product.create',
@@ -37,66 +30,48 @@ class RoleSeeder extends Seeder
             'product.update',
             'product.delete',
 
-            // sheets
-            'sheet.list',
-            'sheet.create',
-            'sheet.read',
-            'sheet.update',
-            'sheet.delete',
         ];
 
         $roles = [
             [
-                'name' => 'super_admin',
-                'permissions' => [
-
-                ]
-            ],
-            [
                 'name' => 'admin',
                 'permissions' => $permissions
-                ],
+            ],
 
-                [
-                    'name' => 'agent',
-                    'permissions' => [
-    
-                        // orders
-                        'order.list',
-                        'order.create',
-                        'order.read',
-                        'order.update',
-                        'order.delete',
-    
-                        // products
-                        'product.list',
-                        'product.read',
-                    ]
-                ],
-                [
-                    'name' => 'delivery',
-                    'permissions' => [
-    
-                        // orders
-                        'order.list',
-                        'order.read',
-                        'order.update',
-    
-                        // products
-                        'product.list',
-                        'product.read',
-                    ]
-                    ],
+            [
+                'name' => 'attendant',
+                'permissions' => []
+            ]
+            ,
+            [
+                'name' => 'exhibitor',
+                'permissions' => []
+            ],
+            [
+                'name' => 'buyer',
+                'permissions' => []
+            ],
+
+            [
+                'name' => 'sponsor',
+                'permissions' => []
+            ],
+
+            [
+                'name' => 'speaker',
+                'permissions' => []
+            ]
+
         ];
 
-        foreach($permissions as $p) {
+        foreach ($permissions as $p) {
             $permission = Permission::create(['name' => $p]);
         }
 
         foreach ($roles as $r) {
             $role = Role::create(['name' => $r['name']]);
-            
-            foreach($r['permissions'] as $p) {
+
+            foreach ($r['permissions'] as $p) {
                 $role->givePermissionTo($p);
             }
         }

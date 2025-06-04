@@ -35,15 +35,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $user;
     }
 
-    public function deliveries()
-    {
-        return Role::findByName('delivery', 'web')->users()->get();
-    }
-
-    public function agents()
-    {
-        return Role::findByName('agent', 'web')->users()->get();
-    }
 
     public function findByRole($role, $get = true)
     {

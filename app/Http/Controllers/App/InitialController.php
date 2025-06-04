@@ -23,17 +23,11 @@ class InitialController extends Controller
     protected $cities;
 
     public function __construct(
-        OrderRepositoryInterface $orderRepository,
         UserRepositoryInterface $userRepository,
         ProductRepositoryInterface $productRepository
     ) {
-        $this->orderRepository = $orderRepository;
         $this->userRepository = $userRepository;
         $this->productRepository = $productRepository;
-
-        $this->products = $productRepository->query()->orderBy('id', 'desc')->get()->transform(fn ($product) => new ProductForOrderCollection($product));
-        $this->deliveries = $userRepository->deliveries()->transform(fn ($user) => new UserDeliveryResource($user));
-        $this->cities = City::all()->transform(fn ($city) => new CityResource($city));
     }
 
     /**
@@ -42,15 +36,9 @@ class InitialController extends Controller
     public function __invoke(Request $request)
     {
         $response = [
-            'role' => auth()->user()->roles->first()->name,
-            'products' => $this->products,
-            'deliveries' => $this->deliveries,
-            'cities' => $this->cities,
+            'role' => auth()->user()->roles->first()->name
         ];
         switch (auth()->user()->roles->first()->name) {
-            case 'agent':
-                $result = $this->agent();
-                break;
             case 'admin':
                 $result =  $this->admin();
                 break;
@@ -64,39 +52,9 @@ class InitialController extends Controller
 
     public function admin()
     {
-        $confirmed = $this->orderRepository->query()->confirmed()->count();
-        $total = $this->orderRepository->query()->count();
-        $totalNotDuplicated = $this->orderRepository->query()->where('agent_status', '!=', 'duplicate')->count();
-
-        $rates = [
-            'confirmed' => $totalNotDuplicated > 0 ? round(($confirmed * 100) / $totalNotDuplicated, 2) : 0,
-        ];
-
         return [
-            'count' => [
-                'orders' => $total,
-                'confirmed' => $confirmed,
-                'canceled' => $this->orderRepository->query()->canceled()->count(),
-            ],
-            'rates' => $rates,
-
             'code' => 'SUCCESS',
         ];
     }
 
-    public function agent()
-    {
-        $rates = [];
-
-        return [
-            'count' => [
-                'orders' => $this->orderRepository->query()->where('agent_id', auth()->id())->count(),
-                'new' => $this->orderRepository->query()->WhereNotAssigned()->count(),
-            ],
-
-            'rates' => $rates,
-
-            'code' => 'SUCCESS',
-        ];
-    }
 }

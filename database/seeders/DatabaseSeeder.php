@@ -15,10 +15,5 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(GoogleSheetSeeder::class);
-        // $this->call(CitySeeder::class);
-        $this->call(FollowupSeeder::class);
-        $this->call(MarketerSeeder::class);
-        $this->call(SourcingSeeder::class);
     }
 }

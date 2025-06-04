@@ -19,15 +19,12 @@ class ProductStoreController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(StoreProductRequest $request)
+    public function __invoke(Request $request)
     {
 
-        $data = $request->validated();
-        $product = $this->repository->create($data, $request->variants);
 
         return response()->json([
-            'message' => 'Product created successfully',
-            'product' => $product
+            'message' => 'Product created successfully'
         ], 201);
     }
 }

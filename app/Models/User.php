@@ -53,14 +53,6 @@ class User extends Authenticatable
         'is_active' => 'boolean'
     ];
 
-    public function agent_orders() {
-        return $this->hasMany(Order::class, 'agent_id', 'id');
-    }
-
-    public function followup_orders() {
-        return $this->hasMany(Order::class, 'followup_id', 'id');
-    }
-    
     /**
      * Get the user's custom notifications.
      */

@@ -22,18 +22,6 @@ class ProductEditController extends Controller
     {
         $product = $this->repository->find($id);
 
-        if(!$product) {
-            return response()->json([
-                'code' => 'NOT_FOUND'
-            ], 404);
-        }
-
-        $product->load('variants');
-        $product->load('product_crosses');
-        $product->load('offers');
-
-        $product->cross_products = $product->product_crosses;
-
         return response()->json([
             'product' => $product,
             'code' => 'SUCCESS'

@@ -21,7 +21,4 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-
-Route::post('/orders/set-status', OrderDeliveryUpdateController::class)->middleware('bearer');
-
 Route::post('/pusher/presence', PresenceWebhookController::class);

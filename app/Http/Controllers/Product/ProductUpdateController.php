@@ -18,20 +18,12 @@ class ProductUpdateController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(UpdateProductRequest $request, $id)
+    public function __invoke(Request $request, $id)
     {
-        $product = $this->repository->update($id, $request->validated(), $request->variants);
-
-        $product = $this->repository->find($id);
-
-        $product->load('variants');
-        
-
 
         return response()->json([
             'code' => 'SUCCESS',
-            'message' => 'Product updated successfully',
-            'product' => $product
-        ], 201);
+            'message' => 'Product updated successfully'
+        ], 200);
     }
 }

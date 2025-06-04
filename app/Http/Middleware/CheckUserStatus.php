@@ -28,7 +28,7 @@ class CheckUserStatus
             } else {
                 auth('web')->logout();
                 // If status is false, return a 401 Unauthorized response
-                return response()->json(['message' => 'Unauthorized'], 401);
+                return response()->json(['message' => 'Your account is not active', 'code' => 'NOT_ACTIVE'], 401);
             }
         }
         

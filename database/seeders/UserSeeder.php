@@ -20,21 +20,5 @@ class UserSeeder extends Seeder
         ]);
         $admin->assignRole('admin');
 
-        $agent = User::create([
-            'name' => 'Agent Agent',
-            'email' => 'agent@gmail.com',
-            'password' => bcrypt('agent123')
-        ]);
-        $agent->assignRole('agent');
-
-
-        $delivery = User::create([
-            'name' => 'Nawris',
-            'email' => 'nawris@gmail.com',
-            'password' => bcrypt('nawris123')
-        ]);
-        $delivery->assignRole('delivery');
-
-
     }
 }

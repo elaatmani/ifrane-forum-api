@@ -61,9 +61,10 @@ class LoginRequest extends FormRequest
         }
 
         if(auth()->user()->is_active == false){
+            RateLimiter::hit($this->throttleKey());
             Auth::logout();
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => 'account-not-active',
             ])->status(401);
         }
 
