@@ -21,7 +21,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         // Force email validation to fail by adding an invalid email format
-        $request->merge(['email' => 'not-an-email']);
+        //$request->merge(['email' => 'not-an-email']);
         
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
