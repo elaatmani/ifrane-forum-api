@@ -21,6 +21,12 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                // Check if request contains email and password for re-authentication
+                if ($request->has(['email', 'password'])) {
+                    // Allow the request to proceed to the authentication controller
+                    return $next($request);
+                }
+                
                 if($request->expectsJson()) {
                     return response()->json([
                         'code' => 'ALREADY_AUTHENTICATED',

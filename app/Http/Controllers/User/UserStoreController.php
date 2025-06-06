@@ -24,6 +24,8 @@ class UserStoreController extends Controller
 
         $user = $this->repository->create($request->validated());
 
+        $user->is_active = true;
+
         return response()->json([
             'code' => 'SUCCESS',
             'user' =>  new UserListResource($user)
