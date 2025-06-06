@@ -21,6 +21,7 @@ use App\Http\Controllers\Product\ProductShowController;
 use App\Http\Controllers\Product\ProductStoreController;
 use App\Http\Controllers\Product\ProductDeleteController;
 use App\Http\Controllers\Product\ProductUpdateController;
+use App\Http\Controllers\Auth\CurrentSessionDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +38,7 @@ Route::middleware(['auth:sanctum', 'check.status'])->get('/auth/user', function 
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum', 'check.status'])->get('/auth/current', function (Request $request) {
-    return $request->user();
-});
+Route::middleware(['auth:sanctum', 'check.status'])->get('/auth/current', CurrentSessionDataController::class);
 
 
 Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() {
