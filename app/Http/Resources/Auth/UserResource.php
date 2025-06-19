@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'last_login_at' => $this->last_login_at,
             'is_active' => $this->is_active,
             'role' => $this->roles->first()->name ?? 'No Role',
+            'profile_image' => $this->profile_image ? asset('storage/' . $this->profile_image) : null,
             'permissions' => $this->roles->map->permissions->flatten()->pluck('name'),
         ];
     }

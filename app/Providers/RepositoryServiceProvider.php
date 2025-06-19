@@ -6,9 +6,17 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\ProductRepository;
+use App\Repositories\Eloquent\CompanyRepository;
+use App\Repositories\Eloquent\CategoryRepository;
+use App\Repositories\Eloquent\CertificateRepository;
+use App\Repositories\Eloquent\CountryRepository;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Repositories\Contracts\CompanyRepositoryInterface;
+use App\Repositories\Contracts\CategoryRepositoryInterface;
+use App\Repositories\Contracts\CertificateRepositoryInterface;
+use App\Repositories\Contracts\CountryRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -28,5 +36,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BaseRepositoryInterface::class, BaseRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $this->app->bind(CompanyRepositoryInterface::class, CompanyRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->bind(CertificateRepositoryInterface::class, CertificateRepository::class);
+        $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
     }
 }

@@ -21,7 +21,13 @@ class UserUpdateController extends Controller
      */
     public function __invoke(UpdateUserRequest $request, $id)
     {
-        $user = $this->repository->update($id, $request->validated());
+        $data = $request->validated();
+
+        if($request->hasFile('profile_image')) {
+            $data['profile_image'] = $request->file('profile_image')->store('users', 'public');
+        }
+
+        $user = $this->repository->update($id, $data);
 
         return response()->json([
             'code' => 'SUCCESS',

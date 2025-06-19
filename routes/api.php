@@ -4,16 +4,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\App\InitialController;
 use App\Http\Controllers\Auth\PusherController;
+use App\Http\Controllers\App\FormDataController;
 use App\Http\Controllers\Role\RoleListController;
 use App\Http\Controllers\User\UserListController;
+
+
 use App\Http\Controllers\User\UserShowController;
-
-
 use App\Http\Controllers\User\UserStoreController;
 use App\Http\Controllers\User\UserActiveController;
 use App\Http\Controllers\User\UserByRoleController;
-use App\Http\Controllers\User\UserDeleteController;
 
+use App\Http\Controllers\User\UserDeleteController;
 use App\Http\Controllers\User\UserUpdateController;
 use App\Http\Controllers\Product\ProductEditController;
 use App\Http\Controllers\Product\ProductListController;
@@ -22,6 +23,25 @@ use App\Http\Controllers\Product\ProductStoreController;
 use App\Http\Controllers\Product\ProductDeleteController;
 use App\Http\Controllers\Product\ProductUpdateController;
 use App\Http\Controllers\Auth\CurrentSessionDataController;
+use App\Http\Controllers\Company\Admin\CompanyEditController;
+use App\Http\Controllers\Company\Admin\CompanyListController;
+use App\Http\Controllers\Company\Admin\CompanyShowController;
+
+use App\Http\Controllers\Company\Admin\CompanyStoreController;
+use App\Http\Controllers\Category\Admin\CategoryListController;
+use App\Http\Controllers\Company\Admin\CompanyDeleteController;
+use App\Http\Controllers\Company\Admin\CompanyUpdateController;
+use App\Http\Controllers\Category\Admin\CategoryStoreController;
+use App\Http\Controllers\Category\Admin\CategoryDeleteController;
+use App\Http\Controllers\Category\Admin\CategoryUpdateController;
+use App\Http\Controllers\Certificate\Admin\CertificateListController;
+use App\Http\Controllers\Certificate\Admin\CertificateStoreController;
+use App\Http\Controllers\Certificate\Admin\CertificateDeleteController;
+use App\Http\Controllers\Certificate\Admin\CertificateUpdateController;
+
+use App\Http\Controllers\Company\CompanyShowController as PublicCompanyShowController;
+use App\Http\Controllers\Company\CompanyListController as PublicCompanyListController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +90,39 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
     // App 
     Route::group([ 'prefix' => 'app' ], function() {
         Route::get('initial', InitialController::class);
+
+        Route::group([ 'prefix' => 'form-data' ], function() {
+            Route::get('certificates/{type}', [FormDataController::class, 'certificates']);
+            Route::get('categories/{type}', [FormDataController::class, 'categories']);
+            Route::get('countries', [FormDataController::class, 'countries']);
+            Route::get('users', [FormDataController::class, 'users']);
+        });
+    });
+
+    // Admin 
+    Route::group([ 'prefix' => 'admin' ], function() {
+        Route::group([ 'prefix' => 'companies' ], function() {
+            Route::get('/', CompanyListController::class);
+            Route::post('/', CompanyStoreController::class);
+            Route::get('/{id}/edit', CompanyEditController::class);
+            Route::post('/{id}', CompanyUpdateController::class);
+            Route::delete('/{id}', CompanyDeleteController::class);
+            Route::get('/{id}', CompanyShowController::class);
+        });
+
+        Route::group([ 'prefix' => 'categories' ], function() {
+            Route::get('/', CategoryListController::class);
+            Route::post('/', CategoryStoreController::class);
+            Route::post('/{id}', CategoryUpdateController::class);
+            Route::delete('/{id}', CategoryDeleteController::class);
+        });
+
+        Route::group([ 'prefix' => 'certificates' ], function() {
+            Route::get('/', CertificateListController::class);
+            Route::post('/', CertificateStoreController::class);
+            Route::post('/{id}', CertificateUpdateController::class);
+            Route::delete('/{id}', CertificateDeleteController::class);
+        });
     });
 
     // Products 
@@ -81,7 +134,7 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::delete('/{id}', ProductDeleteController::class);
         Route::get('/{id}', ProductShowController::class);
     });
-    
+
     // Users 
     Route::group([ 'prefix' => 'users' ], function() {
         Route::get('/', UserListController::class);
@@ -91,6 +144,12 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::post('/{id}', UserUpdateController::class);
         Route::post('/{id}/active', UserActiveController::class);
         Route::delete('/{id}', UserDeleteController::class);
+    });
+
+    // Companies 
+    Route::group([ 'prefix' => 'companies' ], function() {
+        Route::get('/', PublicCompanyListController::class);
+        Route::get('/{id}', PublicCompanyShowController::class);
     });
 
     // Roles 

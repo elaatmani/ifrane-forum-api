@@ -21,14 +21,26 @@ class UserStoreController extends Controller
      */
     public function __invoke(StoreUserRequest $request)
     {
+        $data = $request->validated();
 
-        $user = $this->repository->create($request->validated());
+        if($request->hasFile('profile_image')) {
+            $data['profile_image'] = $request->file('profile_image')->store('users', 'public');
+        }
 
-        $user->is_active = true;
+        $user = $this->repository->create($data);
+
+        if ($user) {
+            $user->is_active = true;
+
+            return response()->json([
+                'code' => 'SUCCESS',
+                'user' => new UserListResource($user)
+            ], 201);
+        }
 
         return response()->json([
-            'code' => 'SUCCESS',
-            'user' =>  new UserListResource($user)
-        ], 201);
+            'code' => 'ERROR',
+            'message' => 'User creation failed'
+        ], 500);
     }
 }

@@ -26,7 +26,8 @@ class User extends Authenticatable
         'login_times',
         'last_login_at',
         'last_action_at',
-        'is_active'
+        'is_active',
+        'profile_image'
     ];
 
     /**
@@ -67,5 +68,12 @@ class User extends Authenticatable
     public function unreadNotificationsCount()
     {
         return $this->user_notifications()->whereNull('read_at')->count();
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class)
+                    ->withPivot('role')
+                    ->withTimestamps();
     }
 }

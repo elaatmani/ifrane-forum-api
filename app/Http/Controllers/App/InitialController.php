@@ -10,24 +10,24 @@ use App\Http\Resources\User\UserDeliveryResource;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\OrderRepositoryInterface;
 use App\Http\Resources\Product\ProductForOrderCollection;
+use App\Repositories\Contracts\CompanyRepositoryInterface;
+use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Repositories\Contracts\CategoryRepositoryInterface;
+use App\Repositories\Contracts\CertificateRepositoryInterface;
 
 class InitialController extends Controller
 {
-    protected $orderRepository;
-    protected $userRepository;
-    protected $productRepository;
 
-    protected $products;
-    protected $deliveries;
-    protected $cities;
 
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        ProductRepositoryInterface $productRepository
+        protected UserRepositoryInterface $userRepository,
+        protected ProductRepositoryInterface $productRepository,
+        protected CompanyRepositoryInterface $companyRepository,
+        protected CategoryRepositoryInterface $categoryRepository,
+        protected CertificateRepositoryInterface $certificateRepository,
+        protected CountryRepositoryInterface $countryRepository
     ) {
-        $this->userRepository = $userRepository;
-        $this->productRepository = $productRepository;
     }
 
     /**
@@ -52,6 +52,11 @@ class InitialController extends Controller
 
     public function admin()
     {
+        // $countries = $this->countryRepository->query()->select('id', 'name')->get();
+        // $categories = $this->categoryRepository->query()->select('id', 'name')->get();
+        // $certificates = $this->certificateRepository->query()->select('id', 'name')->get();
+        // $users = $this->userRepository->query()->select('id', 'name')->get();
+        
         return [
             'code' => 'SUCCESS',
         ];

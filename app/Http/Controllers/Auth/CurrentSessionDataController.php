@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Auth\UserResource;
 
 class CurrentSessionDataController extends Controller
 {
@@ -16,11 +17,10 @@ class CurrentSessionDataController extends Controller
 
         return response()->json(
             [
-                "id" => $user->id,
-                "name" => $user->name,
-                "email" => $user->email,
-                "roles" => $user->roles->pluck('name'),
-                "role" => $user->roles->first()->name,
+                'code' => 'SUCCESS',
+                'data' => [
+                    'user' => new UserResource($user),
+                ]
             ]
         );
     }

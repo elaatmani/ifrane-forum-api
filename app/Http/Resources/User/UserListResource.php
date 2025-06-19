@@ -15,6 +15,8 @@ class UserListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $profile_image = $this->profile_image ? asset('storage/' . $this->profile_image) : null;
+        
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -23,6 +25,7 @@ class UserListResource extends JsonResource
             'last_login_at' => $this->last_login_at,
             'last_action_at' => $this->last_action_at,
             'is_active' => $this->is_active,
+            'profile_image' => $profile_image,
             'role' => Str::title(str_replace('_', ' ', $this->roles->first()->name ?? 'No Role')),
             'updated_at' => $this->updated_at,
         ];
