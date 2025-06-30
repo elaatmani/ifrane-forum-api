@@ -171,4 +171,11 @@ class CompanyRepository extends BaseRepository implements CompanyRepositoryInter
 
         return $query->paginate($perPage);
     }
+
+    public function getCompaniesByUserId($userId)
+    {
+        return $this->model->whereHas('users', function ($q) use ($userId) {
+            $q->where('users.id', $userId);
+        })->get();
+    }
 }

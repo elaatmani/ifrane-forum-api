@@ -10,6 +10,8 @@ use App\Repositories\Eloquent\CompanyRepository;
 use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\CertificateRepository;
 use App\Repositories\Eloquent\CountryRepository;
+use App\Repositories\Eloquent\DocumentRepository;
+use App\Repositories\Eloquent\ServiceRepository;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
@@ -17,6 +19,8 @@ use App\Repositories\Contracts\CompanyRepositoryInterface;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\CertificateRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
+use App\Repositories\Contracts\DocumentRepositoryInterface;
+use App\Repositories\Contracts\ServiceRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -40,5 +44,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
         $this->app->bind(CertificateRepositoryInterface::class, CertificateRepository::class);
         $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
+        $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
+        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
     }
 }

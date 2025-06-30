@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Product;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\ProductStoreRequest;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Http\Resources\Product\Company\ProductListResource;
 
 class ProductStoreController extends Controller
 {
@@ -19,12 +20,24 @@ class ProductStoreController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(ProductStoreRequest $request)
     {
+        $data = $request->validated();
+        $data['created_by'] = auth()->user()->id;
 
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail_url'] = $request->file('thumbnail')->store('products', 'public');
+        }
+
+        if ($request->has('category_ids')) {
+            $data['category_ids'] = json_decode($request->category_ids, true);
+        }
+
+        $product = $this->repository->create($data);
 
         return response()->json([
-            'message' => 'Product created successfully'
+            'message' => 'Product created successfully',
+            'product' => new ProductListResource($product)
         ], 201);
     }
 }

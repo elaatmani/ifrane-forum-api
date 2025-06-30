@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->nullable()->constrained()->index();
             $table->string('name');
-            $table->boolean('enabled');
+            $table->string('status')->default('active');
             $table->longText('description')->nullable();
-            $table->string('images');
+            $table->string('image')->nullable()->default(null);
             $table->timestamps();
         });
     }

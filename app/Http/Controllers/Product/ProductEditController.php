@@ -22,9 +22,23 @@ class ProductEditController extends Controller
     {
         $product = $this->repository->find($id);
 
+        if(!$product) {
+            return response()->json([
+                'message' => 'Product not found',
+                'code' => 'NOT_FOUND'
+            ], 404);
+        }
+
+        $thumbnail_url = $product->thumbnail_url ? asset('storage/' . $product->thumbnail_url) : null;
+
         return response()->json([
-            'product' => $product,
-            'code' => 'SUCCESS'
+            'id' => $product->id,
+            'name' => $product->name,
+            'description' => $product->description,
+            'thumbnail_url' => $thumbnail_url,
+            'categories' => $product->categories->map(function($category) {
+                return ['id' => $category->id, 'name' => $category->name];
+            }),
         ]);
     }
 }

@@ -6,36 +6,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
+class Document extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;//, SoftDeletes;
 
     protected $fillable = [
         'company_id',
+        'created_by',
         'name',
         'description',
+        'file_url',
         'thumbnail_url',
-        'created_by',
-    ];
-
-    protected $casts = [
-        'company_id' => 'integer',
-        'created_by' => 'integer',
+        'type',
+        'size',
+        'extension',
+        'mime_type',
+        'status',
     ];
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class);
-    }
 }
-

@@ -25,9 +25,17 @@ class ProductListController extends Controller
 
         $products = $this->repository->query();
 
+        if ($request->has('search')) {
+            $products = $products->where('name', 'like', '%' . $request->search . '%');
+        }
+
         $products = $products->orderBy('id', 'desc');
         
         $products = $products->paginate($per_page);
+
+        $products->getCollection()->transform(function ($product) {
+            return new ProductListResource($product);
+        });
 
         return response()->json([
             'data' => $products,

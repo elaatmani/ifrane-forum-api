@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Http\Requests\Product\ProductUpdateRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\UpdateProductRequest;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 
 class ProductUpdateController extends Controller
@@ -18,12 +18,24 @@ class ProductUpdateController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, $id)
+    public function __invoke(ProductUpdateRequest $request, $id)
     {
+        $data = $request->validated();
+
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail_url'] = $request->file('thumbnail')->store('products', 'public');
+        }
+
+        if ($request->has('category_ids')) {
+            $data['category_ids'] = json_decode($request->category_ids, true);
+        }
+
+        $product = $this->repository->update($id, $data);
 
         return response()->json([
             'code' => 'SUCCESS',
-            'message' => 'Product updated successfully'
+            'message' => 'Product updated successfully',
+            'product' => $product
         ], 200);
     }
 }

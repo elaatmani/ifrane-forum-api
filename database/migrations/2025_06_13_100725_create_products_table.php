@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
-            $table->string('sku')->unique();
+            $table->integer('company_id')->nullable()->default(null);
             $table->text('name')->nullable()->default(null);
             $table->text('description')->nullable()->default(null);
+            $table->text('thumbnail_url')->nullable()->default(null);
             $table->integer('created_by')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();

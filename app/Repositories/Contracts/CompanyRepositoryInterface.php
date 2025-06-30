@@ -13,4 +13,6 @@ interface CompanyRepositoryInterface extends BaseRepositoryInterface
      * Get filtered and paginated companies
      */
     public function getFilteredCompanies(array $filters, int $perPage = 10);
+
+    public function getCompaniesByUserId($userId);
 }

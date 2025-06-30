@@ -16,31 +16,43 @@ use App\Http\Controllers\User\UserByRoleController;
 
 use App\Http\Controllers\User\UserDeleteController;
 use App\Http\Controllers\User\UserUpdateController;
-use App\Http\Controllers\Product\ProductEditController;
-use App\Http\Controllers\Product\ProductListController;
-use App\Http\Controllers\Product\ProductShowController;
-use App\Http\Controllers\Product\ProductStoreController;
-use App\Http\Controllers\Product\ProductDeleteController;
-use App\Http\Controllers\Product\ProductUpdateController;
+use App\Http\Controllers\Company\MyCompanyController;
+use App\Http\Controllers\Service\ServiceEditController;
+use App\Http\Controllers\Service\ServiceListController;
+use App\Http\Controllers\Service\ServiceShowController;
+use App\Http\Controllers\Service\ServiceStoreController;
+use App\Http\Controllers\Document\DocumentEditController;
+use App\Http\Controllers\Document\DocumentListController;
+use App\Http\Controllers\Service\ServiceDeleteController;
+use App\Http\Controllers\Service\ServiceUpdateController;
+use App\Http\Controllers\Document\DocumentStoreController;
+
 use App\Http\Controllers\Auth\CurrentSessionDataController;
+use App\Http\Controllers\Document\DocumentDeleteController;
+use App\Http\Controllers\Document\DocumentUpdateController;
 use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
-
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
 use App\Http\Controllers\Category\Admin\CategoryListController;
 use App\Http\Controllers\Company\Admin\CompanyDeleteController;
 use App\Http\Controllers\Company\Admin\CompanyUpdateController;
 use App\Http\Controllers\Category\Admin\CategoryStoreController;
+
 use App\Http\Controllers\Category\Admin\CategoryDeleteController;
 use App\Http\Controllers\Category\Admin\CategoryUpdateController;
 use App\Http\Controllers\Certificate\Admin\CertificateListController;
 use App\Http\Controllers\Certificate\Admin\CertificateStoreController;
 use App\Http\Controllers\Certificate\Admin\CertificateDeleteController;
 use App\Http\Controllers\Certificate\Admin\CertificateUpdateController;
-
-use App\Http\Controllers\Company\CompanyShowController as PublicCompanyShowController;
 use App\Http\Controllers\Company\CompanyListController as PublicCompanyListController;
+use App\Http\Controllers\Company\CompanyShowController as PublicCompanyShowController;
+use App\Http\Controllers\Product\ProductEditController as PublicProductEditController;
+use App\Http\Controllers\Product\ProductListController as PublicProductListController;
+use App\Http\Controllers\Product\ProductShowController as PublicProductShowController;
+use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
+use App\Http\Controllers\Product\ProductDeleteController as PublicProductDeleteController;
+use App\Http\Controllers\Product\ProductUpdateController as PublicProductUpdateController;
 
 
 /*
@@ -99,6 +111,10 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         });
     });
 
+    Route::group([ 'prefix' => 'me' ], function() {
+        Route::get('/companies', MyCompanyController::class);
+    });
+
     // Admin 
     Route::group([ 'prefix' => 'admin' ], function() {
         Route::group([ 'prefix' => 'companies' ], function() {
@@ -125,14 +141,33 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         });
     });
 
+    // Documents 
+    Route::group([ 'prefix' => 'documents' ], function() {
+        Route::post('/', DocumentStoreController::class);
+        Route::get('/', DocumentListController::class);
+        Route::get('/{id}/edit', DocumentEditController::class);
+        Route::post('/{id}', DocumentUpdateController::class);
+        Route::delete('/{id}', DocumentDeleteController::class);
+    });
+
+    // Services
+    Route::group([ 'prefix' => 'services' ], function() {
+        Route::get('/', ServiceListController::class);
+        Route::post('/', ServiceStoreController::class);
+        Route::get('/{id}/edit', ServiceEditController::class);
+        Route::get('/{id}', ServiceShowController::class);
+        Route::post('/{id}', ServiceUpdateController::class);
+        Route::delete('/{id}', ServiceDeleteController::class);
+    });
+
     // Products 
     Route::group([ 'prefix' => 'products' ], function() {
-        Route::get('/', ProductListController::class);
-        Route::post('/', ProductStoreController::class);
-        Route::get('/{id}/edit', ProductEditController::class);
-        Route::post('/{id}', ProductUpdateController::class);
-        Route::delete('/{id}', ProductDeleteController::class);
-        Route::get('/{id}', ProductShowController::class);
+        Route::get('/', PublicProductListController::class);
+        Route::post('/', PublicProductStoreController::class);
+        Route::get('/{id}/edit', PublicProductEditController::class);
+        Route::post('/{id}', PublicProductUpdateController::class);
+        Route::delete('/{id}', PublicProductDeleteController::class);
+        Route::get('/{id}', PublicProductShowController::class);
     });
 
     // Users 
