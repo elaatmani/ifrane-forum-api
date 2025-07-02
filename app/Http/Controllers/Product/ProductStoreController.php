@@ -25,6 +25,10 @@ class ProductStoreController extends Controller
         $data = $request->validated();
         $data['created_by'] = auth()->user()->id;
 
+        $companyId = session('acting_as_company.id', null);
+
+        $data['company_id'] = $companyId;
+
         if ($request->hasFile('thumbnail')) {
             $data['thumbnail_url'] = $request->file('thumbnail')->store('products', 'public');
         }
@@ -32,6 +36,8 @@ class ProductStoreController extends Controller
         if ($request->has('category_ids')) {
             $data['category_ids'] = json_decode($request->category_ids, true);
         }
+
+        
 
         $product = $this->repository->create($data);
 

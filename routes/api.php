@@ -16,6 +16,7 @@ use App\Http\Controllers\User\UserByRoleController;
 
 use App\Http\Controllers\User\UserDeleteController;
 use App\Http\Controllers\User\UserUpdateController;
+use App\Http\Controllers\Auth\ActAsCompanyController;
 use App\Http\Controllers\Company\MyCompanyController;
 use App\Http\Controllers\Service\ServiceEditController;
 use App\Http\Controllers\Service\ServiceListController;
@@ -25,20 +26,25 @@ use App\Http\Controllers\Document\DocumentEditController;
 use App\Http\Controllers\Document\DocumentListController;
 use App\Http\Controllers\Service\ServiceDeleteController;
 use App\Http\Controllers\Service\ServiceUpdateController;
-use App\Http\Controllers\Document\DocumentStoreController;
 
+use App\Http\Controllers\Document\DocumentStoreController;
 use App\Http\Controllers\Auth\CurrentSessionDataController;
 use App\Http\Controllers\Document\DocumentDeleteController;
 use App\Http\Controllers\Document\DocumentUpdateController;
+use App\Http\Controllers\Auth\StopActingAsCompanyController;
 use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
+use App\Http\Controllers\Product\Admin\ProductShowController as AdminProductShowController;
+use App\Http\Controllers\Product\Admin\ProductListController as AdminProductListController;
+use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
+use App\Http\Controllers\Product\Admin\ProductUpdateController as AdminProductUpdateController;
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
 use App\Http\Controllers\Category\Admin\CategoryListController;
 use App\Http\Controllers\Company\Admin\CompanyDeleteController;
 use App\Http\Controllers\Company\Admin\CompanyUpdateController;
-use App\Http\Controllers\Category\Admin\CategoryStoreController;
 
+use App\Http\Controllers\Category\Admin\CategoryStoreController;
 use App\Http\Controllers\Category\Admin\CategoryDeleteController;
 use App\Http\Controllers\Category\Admin\CategoryUpdateController;
 use App\Http\Controllers\Certificate\Admin\CertificateListController;
@@ -113,6 +119,8 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
 
     Route::group([ 'prefix' => 'me' ], function() {
         Route::get('/companies', MyCompanyController::class);
+        Route::post('/act-as-company/{company_id}', ActAsCompanyController::class);
+        Route::post('/stop-acting-as-company', StopActingAsCompanyController::class);
     });
 
     // Admin 
@@ -138,6 +146,13 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
             Route::post('/', CertificateStoreController::class);
             Route::post('/{id}', CertificateUpdateController::class);
             Route::delete('/{id}', CertificateDeleteController::class);
+        });
+
+        Route::group([ 'prefix' => 'products' ], function() {
+            Route::get('/', AdminProductListController::class);
+            Route::get('/{id}', AdminProductShowController::class);
+            Route::get('/{id}/edit', AdminProductEditController::class);
+            Route::post('/{id}', AdminProductUpdateController::class);
         });
     });
 

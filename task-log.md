@@ -1,45 +1,80 @@
 # Task Log
 
-## Current Task: Complete Service Update Controller Implementation
+## Current Task: Implement Act-As-Company Functionality
 
 ### Tasks:
-- [x] Update ServiceUpdateRequest.php to include is_image_updated validation
-- [x] Complete ServiceUpdateController.php following ServiceStoreController pattern
-- [x] Add update method to ServiceRepository to handle categories relationship
-- [x] Handle FormData string conversion for is_image_updated parameter
+- [x] Create ActAsCompanyController to handle company switching
+- [x] Create StopActingAsCompanyController to handle stopping company context
+- [x] Modify CurrentSessionDataController to include company context
+- [x] Create company resource for session data
+- [x] Add routes for act-as-company functionality
+- [ ] Add session validation middleware (optional)
 
-### Files affected:
-- `app/Http/Requests/Service/ServiceUpdateRequest.php`
-- `app/Http/Controllers/Service/ServiceUpdateController.php`
-- `app/Repositories/Eloquent/ServiceRepository.php`
+### Files to be created:
+- `app/Http/Controllers/Auth/ActAsCompanyController.php`
+- `app/Http/Controllers/Auth/StopActingAsCompanyController.php`  
+- `app/Http/Resources/Auth/ActingCompanyResource.php`
 
-### Data Format Handled:
-```json
-{
-  "name": "test",
-  "description": "test desc", 
-  "categories": "[52,53]",        // JSON array sent as string due to FormData
-  "image": {},                    // File object (optional)
-  "is_image_updated": "true",     // String type due to FormData
-  "status": "active"
-}
+### Files to be affected:
+- `routes/api.php`
+- `app/Http/Controllers/Auth/CurrentSessionDataController.php`
+- `app/Http/Resources/Auth/UserResource.php`
+
+### Requirements:
+- Check if user belongs to targeted company ID
+- Check if user has "exhibitor" role in that company  
+- Save company data in session when conditions are met
+- Return company data with CurrentSessionDataController
+- Provide endpoint to stop acting as company
+- Maintain backward compatibility
+
+### API Endpoints:
+- `POST /api/auth/act-as-company/{company_id}` - Start acting as company
+- `POST /api/auth/stop-acting-as-company` - Stop acting as company
+- `GET /api/auth/current` - Return user + company context (modified)
+
+### Session Data Structure:
+```php
+session([
+    'acting_as_company' => [
+        'id' => $company->id,
+        'name' => $company->name,
+        'role' => $pivotRole, // should be 'exhibitor'
+        'logo' => $company->logo,
+        // other relevant company data
+    ]
+]);
 ```
 
-### Features implemented:
-- ✅ Added is_image_updated validation rule (accepts "true" or "false" as strings)
-- ✅ Comprehensive update logic following ServiceStoreController pattern
-- ✅ Image upload handling based on is_image_updated flag
-- ✅ JSON categories processing and sync with many-to-many relationship
-- ✅ Proper error handling with try-catch block
-- ✅ Service existence validation before update
-- ✅ Custom update method in ServiceRepository to handle categories sync
-- ✅ Authentication-aware updated_by field setting
+### Validation Logic:
+1. Validate company exists and is not soft deleted
+2. Check user belongs to company via company_user pivot table
+3. Verify pivot.role equals 'exhibitor'
+4. Store company context in session
+5. Return updated session data
 
-### Key Features:
-- Handles FormData string conversion for is_image_updated parameter
-- Only processes image upload when is_image_updated is "true" and file exists
-- Uses sync() method for categories to properly update many-to-many relationships
-- Returns fresh() model instance to get updated relationships
-- Follows consistent error response format
+### Security Considerations:
+- Validate company ownership on each acting-as-company request
+- Handle cases where user loses company access while acting as company
+- Clear session data when user logs out
 
 ### Status: Completed ✅
+
+### Implementation Summary:
+- ✅ **ActAsCompanyController**: Validates company ownership, exhibitor role, and stores company data in session
+- ✅ **StopActingAsCompanyController**: Removes company context from session
+- ✅ **CurrentSessionDataController**: Modified to include acting_company data when available
+- ✅ **ActingCompanyResource**: Resource for formatting company data consistently
+- ✅ **API Routes**: Added `/auth/act-as-company/{company_id}` and `/auth/stop-acting-as-company`
+
+### Key Features Implemented:
+- **Security Validation**: Checks user belongs to company and has exhibitor role
+- **Session Management**: Stores company context in Laravel session
+- **Backward Compatibility**: Existing `/auth/current` endpoint maintains original structure
+- **Error Handling**: Proper error responses for invalid access attempts
+- **Clean Architecture**: Separate controllers for each action
+
+### Usage:
+1. `POST /api/auth/act-as-company/{company_id}` - Start acting as company
+2. `POST /api/auth/stop-acting-as-company` - Stop acting as company  
+3. `GET /api/auth/current` - Returns user data + acting_company (if active)

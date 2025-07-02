@@ -21,6 +21,9 @@ class ServiceStoreController extends Controller
             // Get all validated data
             $data = $request->validated();
 
+            $companyId = session('acting_as_company.id', null);
+            $data['company_id'] = $companyId;
+
             // Process JSON array for categories if provided
             if (isset($data['categories'])) {
                 $data['categories'] = json_decode($data['categories'], true);

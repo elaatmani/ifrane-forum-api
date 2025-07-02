@@ -27,6 +27,10 @@ class DocumentStoreController extends Controller
         try {
             // Get validated data
             $data = $request->validated();
+            $companyId = session('acting_as_company.id', null);
+
+            $data['company_id'] = $companyId;
+            
             
             // Handle file upload
             if ($request->hasFile('file')) {
@@ -51,9 +55,9 @@ class DocumentStoreController extends Controller
             $data['created_by'] = auth()->id();
             
             // Set company_id from user's company if not provided
-            // if (!isset($data['company_id']) && auth()->user()->companies()->exists()) {
-            //     $data['company_id'] = auth()->user()->companies()->first()->id;
-            // }
+            if (!isset($data['company_id']) && auth()->user()->companies()->exists()) {
+                $data['company_id'] = auth()->user()->companies()->first()->id;
+            }
             
             // Set default status if not provided
             $data['status'] = $data['status'] ?? 'inactive';
