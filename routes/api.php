@@ -21,29 +21,32 @@ use App\Http\Controllers\Company\MyCompanyController;
 use App\Http\Controllers\Service\ServiceEditController;
 use App\Http\Controllers\Service\ServiceListController;
 use App\Http\Controllers\Service\ServiceShowController;
+use App\Http\Controllers\Sponsor\SponsorListController;
 use App\Http\Controllers\Service\ServiceStoreController;
+use App\Http\Controllers\Sponsor\SponsorStoreController;
 use App\Http\Controllers\Document\DocumentEditController;
 use App\Http\Controllers\Document\DocumentListController;
+
 use App\Http\Controllers\Service\ServiceDeleteController;
 use App\Http\Controllers\Service\ServiceUpdateController;
-
+use App\Http\Controllers\Sponsor\SponsorDeleteController;
+use App\Http\Controllers\Sponsor\SponsorUpdateController;
 use App\Http\Controllers\Document\DocumentStoreController;
 use App\Http\Controllers\Auth\CurrentSessionDataController;
+use App\Http\Controllers\Community\CommunityListController;
 use App\Http\Controllers\Document\DocumentDeleteController;
 use App\Http\Controllers\Document\DocumentUpdateController;
 use App\Http\Controllers\Auth\StopActingAsCompanyController;
+use App\Http\Controllers\Community\CommunityMemberController;
 use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
-use App\Http\Controllers\Product\Admin\ProductShowController as AdminProductShowController;
-use App\Http\Controllers\Product\Admin\ProductListController as AdminProductListController;
-use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
-use App\Http\Controllers\Product\Admin\ProductUpdateController as AdminProductUpdateController;
+use App\Http\Controllers\Sponsor\SponsorPublicListController;
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
 use App\Http\Controllers\Category\Admin\CategoryListController;
+
 use App\Http\Controllers\Company\Admin\CompanyDeleteController;
 use App\Http\Controllers\Company\Admin\CompanyUpdateController;
-
 use App\Http\Controllers\Category\Admin\CategoryStoreController;
 use App\Http\Controllers\Category\Admin\CategoryDeleteController;
 use App\Http\Controllers\Category\Admin\CategoryUpdateController;
@@ -59,6 +62,10 @@ use App\Http\Controllers\Product\ProductShowController as PublicProductShowContr
 use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
 use App\Http\Controllers\Product\ProductDeleteController as PublicProductDeleteController;
 use App\Http\Controllers\Product\ProductUpdateController as PublicProductUpdateController;
+use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
+use App\Http\Controllers\Product\Admin\ProductListController as AdminProductListController;
+use App\Http\Controllers\Product\Admin\ProductShowController as AdminProductShowController;
+use App\Http\Controllers\Product\Admin\ProductUpdateController as AdminProductUpdateController;
 
 
 /*
@@ -154,6 +161,13 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
             Route::get('/{id}/edit', AdminProductEditController::class);
             Route::post('/{id}', AdminProductUpdateController::class);
         });
+
+        Route::group([ 'prefix' => 'sponsors' ], function() {
+            Route::get('/', SponsorListController::class);
+            Route::post('/', SponsorStoreController::class);
+            Route::post('/{id}', SponsorUpdateController::class);
+            Route::delete('/{id}', SponsorDeleteController::class);
+        });
     });
 
     // Documents 
@@ -205,6 +219,17 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
     // Roles 
     Route::group([ 'prefix' => 'roles' ], function() {
         Route::get('/', RoleListController::class);
+    });
+
+    // Community 
+    Route::group([ 'prefix' => 'community' ], function() {
+        Route::get('/', CommunityListController::class);
+        Route::get('/{id}', CommunityMemberController::class);
+    });
+
+    // Sponsors
+    Route::group([ 'prefix' => 'sponsors' ], function() {
+        Route::get('/', SponsorPublicListController::class);
     });
 
     
