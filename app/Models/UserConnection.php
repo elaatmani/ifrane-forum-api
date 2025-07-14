@@ -296,11 +296,13 @@ class UserConnection extends Model
                 'id' => $this->sender->id,
                 'name' => $this->sender->name,
                 'email' => $this->sender->email,
+                'profile_image' => $this->sender->profile_image,
             ],
             'receiver' => [
                 'id' => $this->receiver->id,
                 'name' => $this->receiver->name,
                 'email' => $this->receiver->email,
+                'profile_image' => $this->receiver->profile_image,
             ],
             'message' => $this->message,
             'status' => $this->status,

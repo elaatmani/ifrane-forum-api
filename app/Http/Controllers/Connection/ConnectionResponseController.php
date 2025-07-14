@@ -54,6 +54,12 @@ class ConnectionResponseController extends Controller
             // Send notification to the sender
             $this->sendConnectionNotification($connection, $eventType);
 
+            // Update the original connection request notification with response status
+            $this->updateOriginalRequestNotificationStatus($connection, $eventType);
+
+            // Soft delete the original connection request notification
+            // $this->softDeleteOriginalRequestNotification($connection);
+
             return response()->json([
                 'message' => $successMessage,
                 'data' => new ConnectionRequestResource($connection),
@@ -98,5 +104,48 @@ class ConnectionResponseController extends Controller
             'severity_type' => $notificationConfig['severity'] ?? 'info',
             'data' => $connection->getNotificationData($eventType),
         ]);
+    }
+
+    /**
+     * Update the original connection request notification with response status.
+     */
+    private function updateOriginalRequestNotificationStatus($connection, $eventType)
+    {
+        // Find the original connection request notification
+        $originalNotification = UserNotification::where('user_id', $connection->receiver_id)
+            ->where('notification_type', 'connection_request')
+            ->whereJsonContains('data->connection_id', $connection->id)
+            ->whereNull('deleted_at')
+            ->first();
+
+        if ($originalNotification) {
+            // Get the current data and add status information
+            $currentData = $originalNotification->data ?? [];
+            $currentData['response_status'] = $connection->status;
+            $currentData['responded_at'] = $connection->responded_at;
+            $currentData['response_type'] = $eventType;
+
+            // Update the notification with new metadata
+            $originalNotification->update([
+                'data' => $currentData,
+                'read_at' => now(), // Mark as read since it's been responded to
+            ]);
+
+            // Broadcast the update
+            $originalNotification->broadcast();
+        }
+    }
+
+    /**
+     * Soft delete the original connection request notification.
+     */
+    private function softDeleteOriginalRequestNotification($connection)
+    {
+        // Find and soft delete the original connection request notification
+        UserNotification::where('user_id', $connection->receiver_id)
+            ->where('notification_type', 'connection_request')
+            ->whereJsonContains('data->connection_id', $connection->id)
+            ->whereNull('deleted_at')
+            ->delete(); // This will be a soft delete since the model uses SoftDeletes trait
     }
 } 

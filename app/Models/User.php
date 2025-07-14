@@ -61,6 +61,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserNotification::class);
     }
+
+    /**
+     * Get the user's profile image URL.
+     */
+    public function getProfileImageAttribute($value)
+    {
+        if($value){
+            return asset('storage/' . $value);
+        }
+
+        $colors = ['1abc9c', '3498db', '9b59b6', 'e67e22', 'e74c3c', '34495e', '16a085', '2980b9', '8e44ad', '2c3e50'];
+
+        $index = crc32($this->name) % count($colors);
+        $bgColor = $colors[$index];
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=ffffff&background=' . $bgColor;
+    }
     
     /**
      * Get count of unread notifications.

@@ -15,12 +15,10 @@ class UserOrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $profile_image = $this->profile_image ? asset('storage/' . $this->profile_image) : null;
-        
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'profile_image' => $profile_image,
+            'profile_image' => $this->profile_image,
             'role' => Str::title(str_replace('_', ' ', $this->roles->first()->name ?? 'No Role')),
         ];
     }

@@ -42,6 +42,9 @@ class ConnectionCancelController extends Controller
             // Send notification to the receiver
             $this->sendConnectionNotification($connection, 'request_cancelled');
 
+            // Soft delete the original connection request notification since it's canceled
+            $this->softDeleteOriginalRequestNotification($connection);
+
             return response()->json([
                 'message' => 'Connection request cancelled successfully',
                 'data' => new ConnectionRequestResource($connection),
@@ -86,5 +89,18 @@ class ConnectionCancelController extends Controller
             'severity_type' => $notificationConfig['severity'] ?? 'info',
             'data' => $connection->getNotificationData($eventType),
         ]);
+    }
+
+    /**
+     * Soft delete the original connection request notification.
+     */
+    private function softDeleteOriginalRequestNotification($connection)
+    {
+        // Find and soft delete the original connection request notification
+        UserNotification::where('user_id', $connection->receiver_id)
+            ->where('notification_type', 'connection_request')
+            ->whereJsonContains('data->connection_id', $connection->id)
+            ->whereNull('deleted_at')
+            ->delete(); // This will be a soft delete since the model uses SoftDeletes trait
     }
 } 

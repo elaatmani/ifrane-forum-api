@@ -15,15 +15,7 @@ class CommunityMemberResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-        $colors = ['1abc9c', '3498db', '9b59b6', 'e67e22', 'e74c3c', '34495e', '16a085', '2980b9', '8e44ad', '2c3e50'];
-
-        $index = crc32($this->name) % count($colors);
-        $bgColor = $colors[$index];
-
-        $profile_image = $this->profile_image
-            ? asset('storage/' . $this->profile_image)
-            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=ffffff&background=' . $bgColor;
-
+ 
         $companies = $this->companies;
         $company = $companies->first();
 
@@ -53,7 +45,7 @@ class CommunityMemberResource extends JsonResource
             "name" => $this->name,
             "email" => $this->email,
             "phone" => $this->phone,
-            "profile_image" => $profile_image,
+            "profile_image" => $this->profile_image,
             "role" => $this->roles->first()->name,
             "badge" => $badge,
             "company" => $company ? [

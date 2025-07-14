@@ -37,7 +37,7 @@ class CompanyShowResource extends JsonResource
                 return [
                     'name' => $user->name,
                     'role' => $user->pivot->role,
-                    'profile_image' => $user->profile_image ? asset('storage/' . $user->profile_image) : null,
+                    'profile_image' => $user->profile_image,
                 ];
             }),
             'primary_phone' => $this->primary_phone,

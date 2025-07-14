@@ -130,7 +130,7 @@ class NotificationController extends Controller
     }
     
     /**
-     * Delete a notification.
+     * Delete a notification (soft delete).
      *
      * @param UserNotification $notification
      * @return \Illuminate\Http\JsonResponse
@@ -142,6 +142,7 @@ class NotificationController extends Controller
         $user = Auth::user();
         $notificationId = $notification->id;
         
+        // Soft delete the notification (thanks to SoftDeletes trait)
         $notification->delete();
         
         // Broadcast notification deletion

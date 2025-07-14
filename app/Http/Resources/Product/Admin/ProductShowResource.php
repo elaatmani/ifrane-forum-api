@@ -44,7 +44,7 @@ class ProductShowResource extends JsonResource
                 'id' => $this->createdBy->id,
                 'name' => $this->createdBy->name,
                 'email' => $this->createdBy->email,
-                'profile_image' => $this->createdBy->profile_image ? asset('storage/' . $this->createdBy->profile_image) : null,
+                'profile_image' => $this->createdBy->profile_image,
             ],
         ];
     }
