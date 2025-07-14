@@ -64,6 +64,7 @@ class CommunityMemberResource extends JsonResource
             "connection" => [
                 "id" => $connection?->id,
                 "status" => $connectionStatus,
+                "is_sent_by_me" => $connection && $authUser && $connection->isSentBy($authUser->id),
                 "can_connect" => $authUser && $authUser->id !== $this->id && !$connectionStatus,
                 "mutual_connections" => $mutualConnections,
             ],
