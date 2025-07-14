@@ -67,6 +67,13 @@ use App\Http\Controllers\Product\Admin\ProductListController as AdminProductList
 use App\Http\Controllers\Product\Admin\ProductShowController as AdminProductShowController;
 use App\Http\Controllers\Product\Admin\ProductUpdateController as AdminProductUpdateController;
 
+// Connection Controllers
+use App\Http\Controllers\Connection\ConnectionRequestController;
+use App\Http\Controllers\Connection\ConnectionResponseController;
+use App\Http\Controllers\Connection\ConnectionCancelController;
+use App\Http\Controllers\Connection\ConnectionListController;
+use App\Http\Controllers\Connection\ConnectionDeleteController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -241,6 +248,15 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::post('/{notification}/mark-read', [App\Http\Controllers\API\NotificationController::class, 'markAsRead']);
         Route::post('/{notification}/mark-unread', [App\Http\Controllers\API\NotificationController::class, 'markAsUnread']);
         Route::delete('/{notification}', [App\Http\Controllers\API\NotificationController::class, 'destroy']);
+    });
+
+    // Connections 
+    Route::group([ 'prefix' => 'connections' ], function() {
+        Route::post('/request', ConnectionRequestController::class);
+        Route::post('/{connection}/response', ConnectionResponseController::class);
+        Route::post('/{connection}/cancel', ConnectionCancelController::class);
+        Route::get('/', ConnectionListController::class);
+        Route::delete('/{connection}', ConnectionDeleteController::class);
     });
     
 });

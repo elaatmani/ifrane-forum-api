@@ -32,6 +32,18 @@ class CommunityListResource extends JsonResource
             $company_logo = asset('storage/' . $company_logo);
         }
 
+        $authUser = $request->user();
+        $connection = $authUser ? $authUser->allConnections()
+            ->where(function($query) use ($authUser) {
+                $query->where('sender_id', $authUser->id)
+                    ->where('receiver_id', $this->id)
+                    ->orWhere('sender_id', $this->id)
+                    ->where('receiver_id', $authUser->id);
+            })
+            ->first() : null;
+
+        $connectionStatus = $connection ? $connection->status : null;
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -44,6 +56,11 @@ class CommunityListResource extends JsonResource
                 'logo' => $company_logo,
                 'name' => $company?->name,
                 'role' => $company?->pivot->role,
+            ],
+            'connection' => [
+                'id' => $connection?->id,
+                'status' => $connectionStatus,
+                'can_connect' => $authUser && $authUser->id !== $this->id && !$connectionStatus,
             ],
         ];
     }

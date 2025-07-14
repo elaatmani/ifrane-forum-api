@@ -75,4 +75,128 @@ class User extends Authenticatable
         return $this->belongsToMany(Company::class)
                     ->withPivot('role');
     }
+
+    /**
+     * Get all connection requests sent by this user.
+     */
+    public function sentConnections()
+    {
+        return $this->hasMany(UserConnection::class, 'sender_id');
+    }
+
+    /**
+     * Get all connection requests received by this user.
+     */
+    public function receivedConnections()
+    {
+        return $this->hasMany(UserConnection::class, 'receiver_id');
+    }
+
+    /**
+     * Get all connections (sent and received) for this user.
+     */
+    public function allConnections()
+    {
+        return UserConnection::forUser($this->id);
+    }
+
+    /**
+     * Get all accepted connections for this user.
+     */
+    public function acceptedConnections()
+    {
+        return $this->allConnections()->accepted();
+    }
+
+    /**
+     * Get all pending connection requests sent by this user.
+     */
+    public function pendingSentConnections()
+    {
+        return $this->sentConnections()->pending();
+    }
+
+    /**
+     * Get all pending connection requests received by this user.
+     */
+    public function pendingReceivedConnections()
+    {
+        return $this->receivedConnections()->pending();
+    }
+
+    /**
+     * Check if this user has a connection with another user.
+     */
+    public function hasConnectionWith($userId)
+    {
+        return UserConnection::betweenUsers($this->id, $userId)
+                            ->accepted()
+                            ->exists();
+    }
+
+    /**
+     * Check if this user has a pending connection request with another user.
+     */
+    public function hasPendingConnectionWith($userId)
+    {
+        return UserConnection::betweenUsers($this->id, $userId)
+                            ->pending()
+                            ->exists();
+    }
+
+    /**
+     * Get connection status with another user.
+     */
+    public function getConnectionStatusWith($userId)
+    {
+        $connection = UserConnection::betweenUsers($this->id, $userId)->first();
+        return $connection ? $connection->status : null;
+    }
+
+    /**
+     * Send connection request to another user.
+     */
+    public function sendConnectionRequest($receiverId, $message)
+    {
+        return UserConnection::create([
+            'sender_id' => $this->id,
+            'receiver_id' => $receiverId,
+            'message' => $message,
+            'status' => UserConnection::STATUS_PENDING,
+        ]);
+    }
+
+    /**
+     * Get count of all connections for this user.
+     */
+    public function getConnectionsCount()
+    {
+        return $this->acceptedConnections()->count();
+    }
+
+    /**
+     * Get count of pending connection requests received by this user.
+     */
+    public function getPendingConnectionRequestsCount()
+    {
+        return $this->pendingReceivedConnections()->count();
+    }
+
+    /**
+     * Get mutual connections with another user.
+     */
+    public function getMutualConnectionsWith($userId)
+    {
+        $userConnections = User::find($userId)->acceptedConnections()
+                              ->pluck('sender_id')
+                              ->merge(User::find($userId)->acceptedConnections()->pluck('receiver_id'))
+                              ->unique();
+
+        $myConnections = $this->acceptedConnections()
+                             ->pluck('sender_id')
+                             ->merge($this->acceptedConnections()->pluck('receiver_id'))
+                             ->unique();
+
+        return $userConnections->intersect($myConnections);
+    }
 }

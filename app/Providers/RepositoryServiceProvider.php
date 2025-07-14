@@ -13,6 +13,7 @@ use App\Repositories\Eloquent\CountryRepository;
 use App\Repositories\Eloquent\DocumentRepository;
 use App\Repositories\Eloquent\ServiceRepository;
 use App\Repositories\Eloquent\SponsorRepository;
+use App\Repositories\Eloquent\UserConnectionRepository;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
@@ -23,6 +24,7 @@ use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\DocumentRepositoryInterface;
 use App\Repositories\Contracts\ServiceRepositoryInterface;
 use App\Repositories\Contracts\SponsorRepositoryInterface;
+use App\Repositories\Contracts\UserConnectionRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -49,5 +51,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
         $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
         $this->app->bind(SponsorRepositoryInterface::class, SponsorRepository::class);
+        $this->app->bind(UserConnectionRepositoryInterface::class, UserConnectionRepository::class);
     }
 }

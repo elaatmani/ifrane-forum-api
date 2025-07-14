@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('message');
-            $table->enum('notification_type', ['order_status', 'new_order', 'assignment', 'system']);
-            $table->enum('severity_type', ['info', 'success', 'warning', 'error'])->default('info');
+            $table->string('notification_type')->default('system')->nullable();
+            $table->string('severity_type')->nullable();
             $table->json('data')->nullable();
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
