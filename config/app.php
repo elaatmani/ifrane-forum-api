@@ -59,7 +59,6 @@ return [
 
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
     'asset_url' => env('ASSET_URL'),
 
@@ -194,5 +193,18 @@ return [
     ])->toArray(),
 
     'webhook_secret' => env('WEBHOOK_SECRET', 'your-default-secret-here'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Profile Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This controls whether user profiles are automatically created when
+    | a new user is created. Set to false to disable auto-creation.
+    | This can be useful during testing or bulk operations.
+    |
+    */
+
+    'auto_create_user_profiles' => env('AUTO_CREATE_USER_PROFILES', true),
 
 ];

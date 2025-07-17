@@ -41,7 +41,38 @@ class UserListController extends Controller
 
     public function paginate(Request $request) {
         $per_page = $request->per_page ?? 10;
-        $users = $this->repository->query()->orderBy('id', 'desc')->paginate($per_page);
+        $users = $this->repository->query();
+        
+        
+        $users->when($request->has('search'), function ($query) use ($request) {
+            $query->where(function ($subQuery) use ($request) {
+                $subQuery->where('name', 'like', '%' . $request->search . '%')
+                         ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        });
+
+        // companies search
+        $users->when($request->has('companies'), function ($query) use ($request) {
+            $query->whereHas('companies', function ($subQuery) use ($request) {
+                $subQuery->where('companies.id', $request->companies);
+            });
+        });
+
+        // roles by id
+        $users->when($request->has('roles'), function ($query) use ($request) {
+            $query->whereHas('roles', function ($subQuery) use ($request) {
+                $subQuery->where('roles.id', $request->roles);
+            });
+        });
+
+        // by status
+        $users->when($request->has('status'), function ($query) use ($request) {
+            $query->where('is_active', $request->status == 'active' ? 1 : 0);
+        });
+
+        
+        
+        $users = $users->orderBy('id', 'desc')->paginate($per_page);
         $users->getCollection()->transform(fn($user) => new UserListResource($user));
 
         return response()->json([

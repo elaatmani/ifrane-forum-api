@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'login_times' => $this->login_times,
             'last_login_at' => $this->last_login_at,
-            'is_active' => $this->is_active,
+            'is_completed' => $this->is_completed,
             'role' => $this->roles->first()->name ?? 'No Role',
             'profile_image' => $this->profile_image,
             'permissions' => $this->roles->map->permissions->flatten()->pluck('name'),

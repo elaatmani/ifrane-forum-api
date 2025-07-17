@@ -87,6 +87,14 @@ class User extends Authenticatable
         return $this->user_notifications()->whereNull('read_at')->count();
     }
 
+    /**
+     * Get the user's profile.
+     */
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
     public function companies()
     {
         return $this->belongsToMany(Company::class)

@@ -31,6 +31,7 @@ use App\Http\Controllers\Service\ServiceDeleteController;
 use App\Http\Controllers\Service\ServiceUpdateController;
 use App\Http\Controllers\Sponsor\SponsorDeleteController;
 use App\Http\Controllers\Sponsor\SponsorUpdateController;
+use App\Http\Controllers\Company\CompanyAllListController;
 use App\Http\Controllers\Document\DocumentStoreController;
 use App\Http\Controllers\Auth\CurrentSessionDataController;
 use App\Http\Controllers\Community\CommunityListController;
@@ -41,15 +42,20 @@ use App\Http\Controllers\Community\CommunityMemberController;
 use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
+use App\Http\Controllers\Connection\ConnectionListController;
 use App\Http\Controllers\Sponsor\SponsorPublicListController;
+
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
 use App\Http\Controllers\Category\Admin\CategoryListController;
-
 use App\Http\Controllers\Company\Admin\CompanyDeleteController;
 use App\Http\Controllers\Company\Admin\CompanyUpdateController;
+use App\Http\Controllers\Connection\ConnectionCancelController;
+use App\Http\Controllers\Connection\ConnectionDeleteController;
 use App\Http\Controllers\Category\Admin\CategoryStoreController;
+use App\Http\Controllers\Connection\ConnectionRequestController;
 use App\Http\Controllers\Category\Admin\CategoryDeleteController;
 use App\Http\Controllers\Category\Admin\CategoryUpdateController;
+use App\Http\Controllers\Connection\ConnectionResponseController;
 use App\Http\Controllers\Certificate\Admin\CertificateListController;
 use App\Http\Controllers\Certificate\Admin\CertificateStoreController;
 use App\Http\Controllers\Certificate\Admin\CertificateDeleteController;
@@ -60,19 +66,14 @@ use App\Http\Controllers\Product\ProductEditController as PublicProductEditContr
 use App\Http\Controllers\Product\ProductListController as PublicProductListController;
 use App\Http\Controllers\Product\ProductShowController as PublicProductShowController;
 use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
+
+// Connection Controllers
 use App\Http\Controllers\Product\ProductDeleteController as PublicProductDeleteController;
 use App\Http\Controllers\Product\ProductUpdateController as PublicProductUpdateController;
 use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
 use App\Http\Controllers\Product\Admin\ProductListController as AdminProductListController;
 use App\Http\Controllers\Product\Admin\ProductShowController as AdminProductShowController;
 use App\Http\Controllers\Product\Admin\ProductUpdateController as AdminProductUpdateController;
-
-// Connection Controllers
-use App\Http\Controllers\Connection\ConnectionRequestController;
-use App\Http\Controllers\Connection\ConnectionResponseController;
-use App\Http\Controllers\Connection\ConnectionCancelController;
-use App\Http\Controllers\Connection\ConnectionListController;
-use App\Http\Controllers\Connection\ConnectionDeleteController;
 
 
 /*
@@ -142,6 +143,7 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::group([ 'prefix' => 'companies' ], function() {
             Route::get('/', CompanyListController::class);
             Route::post('/', CompanyStoreController::class);
+            Route::get('/all', CompanyAllListController::class);
             Route::get('/{id}/edit', CompanyEditController::class);
             Route::post('/{id}', CompanyUpdateController::class);
             Route::delete('/{id}', CompanyDeleteController::class);
