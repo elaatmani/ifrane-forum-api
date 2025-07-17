@@ -37,7 +37,7 @@ class OnboardingRequest extends FormRequest
             'city' => 'sometimes|string|nullable',
             'state' => 'sometimes|string|nullable',
             'postal_code' => 'sometimes|string|nullable',
-            'profile_image' => 'sometimes|image|nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'profile_image' => 'sometimes|string|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'full_name' => 'sometimes|string|nullable|max:255'
         ];
     }
