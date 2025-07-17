@@ -41,7 +41,7 @@ class OnboardingRequest extends FormRequest
         ];
 
         if($this->hasFile('profile_image')) {
-            $rules['profile_image'] = 'sometimes|string|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048';
+            $rules['profile_image'] = 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048';
         }
 
         return $rules;
