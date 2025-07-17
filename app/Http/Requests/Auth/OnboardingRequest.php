@@ -21,7 +21,7 @@ class OnboardingRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'country_id' => 'sometimes|integer|exists:countries,id',
             'about' => 'sometimes|string|nullable',
             'linkedin_url' => 'sometimes|url|nullable',
@@ -37,9 +37,14 @@ class OnboardingRequest extends FormRequest
             'city' => 'sometimes|string|nullable',
             'state' => 'sometimes|string|nullable',
             'postal_code' => 'sometimes|string|nullable',
-            'profile_image' => 'sometimes|string|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'full_name' => 'sometimes|string|nullable|max:255'
         ];
+
+        if($this->hasFile('profile_image')) {
+            $rules['profile_image'] = 'sometimes|string|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048';
+        }
+
+        return $rules;
     }
 
 
