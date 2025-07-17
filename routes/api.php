@@ -11,9 +11,10 @@ use App\Http\Controllers\User\UserListController;
 
 use App\Http\Controllers\User\UserShowController;
 use App\Http\Controllers\User\UserStoreController;
+use App\Http\Controllers\Auth\OnboardingController;
 use App\Http\Controllers\User\UserActiveController;
-use App\Http\Controllers\User\UserByRoleController;
 
+use App\Http\Controllers\User\UserByRoleController;
 use App\Http\Controllers\User\UserDeleteController;
 use App\Http\Controllers\User\UserUpdateController;
 use App\Http\Controllers\Auth\ActAsCompanyController;
@@ -25,8 +26,8 @@ use App\Http\Controllers\Sponsor\SponsorListController;
 use App\Http\Controllers\Service\ServiceStoreController;
 use App\Http\Controllers\Sponsor\SponsorStoreController;
 use App\Http\Controllers\Document\DocumentEditController;
-use App\Http\Controllers\Document\DocumentListController;
 
+use App\Http\Controllers\Document\DocumentListController;
 use App\Http\Controllers\Service\ServiceDeleteController;
 use App\Http\Controllers\Service\ServiceUpdateController;
 use App\Http\Controllers\Sponsor\SponsorDeleteController;
@@ -43,8 +44,8 @@ use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
 use App\Http\Controllers\Connection\ConnectionListController;
-use App\Http\Controllers\Sponsor\SponsorPublicListController;
 
+use App\Http\Controllers\Sponsor\SponsorPublicListController;
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
 use App\Http\Controllers\Category\Admin\CategoryListController;
 use App\Http\Controllers\Company\Admin\CompanyDeleteController;
@@ -65,9 +66,9 @@ use App\Http\Controllers\Company\CompanyShowController as PublicCompanyShowContr
 use App\Http\Controllers\Product\ProductEditController as PublicProductEditController;
 use App\Http\Controllers\Product\ProductListController as PublicProductListController;
 use App\Http\Controllers\Product\ProductShowController as PublicProductShowController;
-use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
 
 // Connection Controllers
+use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
 use App\Http\Controllers\Product\ProductDeleteController as PublicProductDeleteController;
 use App\Http\Controllers\Product\ProductUpdateController as PublicProductUpdateController;
 use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
@@ -259,6 +260,12 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::post('/{connection}/cancel', ConnectionCancelController::class);
         Route::get('/', ConnectionListController::class);
         Route::delete('/{connection}', ConnectionDeleteController::class);
+    });
+
+    // Onboarding 
+    Route::group([ 'prefix' => 'onboarding' ], function() {
+        Route::get('/', OnboardingController::class);
+        Route::post('/', [OnboardingController::class, 'update']);
     });
     
 });

@@ -21,8 +21,12 @@ class UserProfile extends Model
         'youtube_url',
         'github_url',
         'website_url',
-        'address',
         'contact_email',
+        'language',
+        'street',
+        'city',
+        'state',
+        'postal_code',
     ];
 
     /**

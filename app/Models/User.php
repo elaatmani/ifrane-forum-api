@@ -27,6 +27,7 @@ class User extends Authenticatable
         'last_login_at',
         'last_action_at',
         'is_active',
+        'is_completed',
         'profile_image'
     ];
 

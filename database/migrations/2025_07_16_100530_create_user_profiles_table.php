@@ -15,7 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             $table->foreignId('country_id')->nullable()->default(null)->constrained()->onDelete('set null');
+            
+
+            // about
             $table->text('about')->nullable()->default(null);
+            $table->string('language')->nullable()->default('en');
+            $table->string('contact_email')->nullable()->default(null);
+
+            // social media
             $table->string('linkedin_url')->nullable()->default(null);
             $table->string('instagram_url')->nullable()->default(null);
             $table->string('twitter_url')->nullable()->default(null);
@@ -23,8 +30,12 @@ return new class extends Migration
             $table->string('youtube_url')->nullable()->default(null);
             $table->string('github_url')->nullable()->default(null);
             $table->string('website_url')->nullable()->default(null);
-            $table->text('address')->nullable()->default(null);
-            $table->string('contact_email')->nullable()->default(null);
+
+            // address
+            $table->string('street')->nullable()->default(null);
+            $table->string('city')->nullable()->default(null);
+            $table->string('state')->nullable()->default(null);
+            $table->string('postal_code')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
         });
