@@ -44,4 +44,9 @@ class UserProfile extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function getCountryNameAttribute()
+    {
+        return $this->country?->name;
+    }
 }

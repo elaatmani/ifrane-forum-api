@@ -4,6 +4,7 @@ namespace App\Http\Resources\Company;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Services\Community\CompanyRecommendationService;
 
 class CompanyShowResource extends JsonResource
 {
@@ -16,6 +17,14 @@ class CompanyShowResource extends JsonResource
     {
         $logo = $this->logo ? asset('storage/' . $this->logo) : null;
         $background_image = $this->background_image ? asset('storage/' . $this->background_image) : null;
+        
+        // Get company recommendations
+        $recommendations = [];
+        $companyRecommendationService = app(CompanyRecommendationService::class);
+        $recommendations = $companyRecommendationService->getRecommendationsForCompany(
+            $this->resource, 
+            $request->user()
+        );
         
         return [
             'id' => $this->id,
@@ -44,6 +53,7 @@ class CompanyShowResource extends JsonResource
             'secondary_phone' => $this->secondary_phone,
             'primary_email' => $this->primary_email,
             'secondary_email' => $this->secondary_email,
+            'recommendations' => $recommendations,
         ];
 
     }

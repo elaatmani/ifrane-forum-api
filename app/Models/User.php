@@ -225,4 +225,29 @@ class User extends Authenticatable
 
         return $userConnections->intersect($myConnections);
     }
+
+
+    /**
+     * Get mutual connections with another user with (id, name, profile_image).
+     */
+    public function getMutualConnectionsWithProfile($userId)
+    {
+        $mutualConnectionIds = $this->getMutualConnectionsWith($userId);
+        
+        // Remove current user and target user from mutual connections
+        $mutualConnectionIds = $mutualConnectionIds->reject(function($id) use ($userId) {
+            return $id == $this->id || $id == $userId;
+        });
+
+        // Fetch User models for the mutual connection IDs
+        $mutualUsers = User::whereIn('id', $mutualConnectionIds)->get();
+
+        return $mutualUsers->map(function($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'profile_image' => $user->profile_image,
+            ];
+        });
+    }
 }
