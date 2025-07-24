@@ -40,6 +40,7 @@ class CommunityMemberService
                 'connection' => $this->connectionService->getConnectionData($user, $authUser),
                 'profile' => $this->formatProfileData($profile),
                 'recommendations' => $this->userRecommendationService->getRecommendationsForUser($user, $authUser),
+                'is_bookmarked' => $user->isBookmarked()
             ];
 
         } catch (\Exception $e) {

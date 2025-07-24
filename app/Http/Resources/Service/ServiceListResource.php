@@ -30,6 +30,7 @@ class ServiceListResource extends JsonResource
                     'name' => $category->name,
                 ];
             }),
+            'is_bookmarked' => $this->resource->isBookmarked()
         ];
     }
 }

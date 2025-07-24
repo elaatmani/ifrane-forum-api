@@ -14,6 +14,7 @@ use App\Repositories\Eloquent\DocumentRepository;
 use App\Repositories\Eloquent\ServiceRepository;
 use App\Repositories\Eloquent\SponsorRepository;
 use App\Repositories\Eloquent\UserConnectionRepository;
+use App\Repositories\Eloquent\BookmarkRepository;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
@@ -25,6 +26,7 @@ use App\Repositories\Contracts\DocumentRepositoryInterface;
 use App\Repositories\Contracts\ServiceRepositoryInterface;
 use App\Repositories\Contracts\SponsorRepositoryInterface;
 use App\Repositories\Contracts\UserConnectionRepositoryInterface;
+use App\Repositories\Contracts\BookmarkRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -52,5 +54,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
         $this->app->bind(SponsorRepositoryInterface::class, SponsorRepository::class);
         $this->app->bind(UserConnectionRepositoryInterface::class, UserConnectionRepository::class);
+        $this->app->bind(BookmarkRepositoryInterface::class, BookmarkRepository::class);
     }
 }

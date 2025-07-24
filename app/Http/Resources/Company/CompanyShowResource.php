@@ -54,6 +54,7 @@ class CompanyShowResource extends JsonResource
             'primary_email' => $this->primary_email,
             'secondary_email' => $this->secondary_email,
             'recommendations' => $recommendations,
+            'is_bookmarked' => $this->resource->isBookmarked()
         ];
 
     }

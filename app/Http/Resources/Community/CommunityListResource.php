@@ -55,6 +55,7 @@ class CommunityListResource extends JsonResource
                 'is_sent_by_me' => $connection && $authUser && $connection->isSentBy($authUser->id),
                 'can_connect' => $authUser && $authUser->id !== $this->id && !$connectionStatus,
             ],
+            'is_bookmarked' => $this->resource->isBookmarked()
         ];
     }
 }

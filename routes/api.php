@@ -44,6 +44,10 @@ use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
 use App\Http\Controllers\Connection\ConnectionListController;
+use App\Http\Controllers\Bookmark\BookmarkStoreController;
+use App\Http\Controllers\Bookmark\BookmarkListController;
+use App\Http\Controllers\Bookmark\BookmarkDeleteController;
+use App\Http\Controllers\Bookmark\BookmarkToggleController;
 
 use App\Http\Controllers\Sponsor\SponsorPublicListController;
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
@@ -260,6 +264,14 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::post('/{connection}/cancel', ConnectionCancelController::class);
         Route::get('/', ConnectionListController::class);
         Route::delete('/{connection}', ConnectionDeleteController::class);
+    });
+
+    // Bookmarks 
+    Route::group([ 'prefix' => 'bookmarks' ], function() {
+        Route::get('/', BookmarkListController::class);
+        Route::post('/', BookmarkStoreController::class);
+        Route::put('/toggle', BookmarkToggleController::class);
+        Route::delete('/{bookmark}', BookmarkDeleteController::class);
     });
 
     // Onboarding 

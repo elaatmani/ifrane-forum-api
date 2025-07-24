@@ -25,6 +25,7 @@ class ProductListResource extends JsonResource
             'categories' => $this->categories->map(function($category) {
                 return ['id' => $category->id, 'name' => $category->name];
             }),
+            'is_bookmarked' => $this->resource->isBookmarked()
         ];
     }
 }
