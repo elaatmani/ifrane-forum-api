@@ -12,45 +12,52 @@ use App\Http\Controllers\User\UserListController;
 use App\Http\Controllers\User\UserShowController;
 use App\Http\Controllers\User\UserStoreController;
 use App\Http\Controllers\Auth\OnboardingController;
-use App\Http\Controllers\User\UserActiveController;
+use App\Http\Controllers\MyEshow\MyEshowController;
 
+use App\Http\Controllers\User\UserActiveController;
 use App\Http\Controllers\User\UserByRoleController;
 use App\Http\Controllers\User\UserDeleteController;
 use App\Http\Controllers\User\UserUpdateController;
 use App\Http\Controllers\Auth\ActAsCompanyController;
 use App\Http\Controllers\Company\MyCompanyController;
+use App\Http\Controllers\Dashboard\OverviewController;
 use App\Http\Controllers\Service\ServiceEditController;
 use App\Http\Controllers\Service\ServiceListController;
 use App\Http\Controllers\Service\ServiceShowController;
+use App\Http\Controllers\Session\SessionJoinController;
+use App\Http\Controllers\Session\SessionShowController;
+
 use App\Http\Controllers\Sponsor\SponsorListController;
 use App\Http\Controllers\Service\ServiceStoreController;
 use App\Http\Controllers\Sponsor\SponsorStoreController;
+use App\Http\Controllers\Bookmark\BookmarkListController;
 use App\Http\Controllers\Document\DocumentEditController;
-
 use App\Http\Controllers\Document\DocumentListController;
 use App\Http\Controllers\Service\ServiceDeleteController;
 use App\Http\Controllers\Service\ServiceUpdateController;
 use App\Http\Controllers\Sponsor\SponsorDeleteController;
 use App\Http\Controllers\Sponsor\SponsorUpdateController;
+use App\Http\Controllers\Bookmark\BookmarkStoreController;
 use App\Http\Controllers\Company\CompanyAllListController;
 use App\Http\Controllers\Document\DocumentStoreController;
 use App\Http\Controllers\Auth\CurrentSessionDataController;
+use App\Http\Controllers\Bookmark\BookmarkDeleteController;
+use App\Http\Controllers\Bookmark\BookmarkToggleController;
 use App\Http\Controllers\Community\CommunityListController;
 use App\Http\Controllers\Document\DocumentDeleteController;
 use App\Http\Controllers\Document\DocumentUpdateController;
 use App\Http\Controllers\Auth\StopActingAsCompanyController;
 use App\Http\Controllers\Community\CommunityMemberController;
+
+// Session Controllers
 use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
 use App\Http\Controllers\Connection\ConnectionListController;
-use App\Http\Controllers\Bookmark\BookmarkStoreController;
-use App\Http\Controllers\Bookmark\BookmarkListController;
-use App\Http\Controllers\Bookmark\BookmarkDeleteController;
-use App\Http\Controllers\Bookmark\BookmarkToggleController;
-
 use App\Http\Controllers\Sponsor\SponsorPublicListController;
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
+
+
 use App\Http\Controllers\Category\Admin\CategoryListController;
 use App\Http\Controllers\Company\Admin\CompanyDeleteController;
 use App\Http\Controllers\Company\Admin\CompanyUpdateController;
@@ -65,20 +72,32 @@ use App\Http\Controllers\Certificate\Admin\CertificateListController;
 use App\Http\Controllers\Certificate\Admin\CertificateStoreController;
 use App\Http\Controllers\Certificate\Admin\CertificateDeleteController;
 use App\Http\Controllers\Certificate\Admin\CertificateUpdateController;
+use App\Http\Controllers\Session\SessionListController as SessionListController;
 use App\Http\Controllers\Company\CompanyListController as PublicCompanyListController;
 use App\Http\Controllers\Company\CompanyShowController as PublicCompanyShowController;
 use App\Http\Controllers\Product\ProductEditController as PublicProductEditController;
 use App\Http\Controllers\Product\ProductListController as PublicProductListController;
 use App\Http\Controllers\Product\ProductShowController as PublicProductShowController;
+use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
 
 // Connection Controllers
-use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
 use App\Http\Controllers\Product\ProductDeleteController as PublicProductDeleteController;
 use App\Http\Controllers\Product\ProductUpdateController as PublicProductUpdateController;
 use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
 use App\Http\Controllers\Product\Admin\ProductListController as AdminProductListController;
 use App\Http\Controllers\Product\Admin\ProductShowController as AdminProductShowController;
+use App\Http\Controllers\Service\Admin\ServiceEditController as AdminServiceEditController;
+use App\Http\Controllers\Service\Admin\ServiceListController as AdminServiceListController;
+use App\Http\Controllers\Service\Admin\ServiceShowController as AdminServiceShowController;
+use App\Http\Controllers\Session\Admin\SessionEditController as AdminSessionEditController;
+use App\Http\Controllers\Session\Admin\SessionListController as AdminSessionListController;
+use App\Http\Controllers\Service\Admin\ServiceStoreController as AdminServiceStoreController;
+use App\Http\Controllers\Session\Admin\SessionStoreController as AdminSessionStoreController;
 use App\Http\Controllers\Product\Admin\ProductUpdateController as AdminProductUpdateController;
+use App\Http\Controllers\Service\Admin\ServiceDeleteController as AdminServiceDeleteController;
+use App\Http\Controllers\Service\Admin\ServiceUpdateController as AdminServiceUpdateController;
+use App\Http\Controllers\Session\Admin\SessionDeleteController as AdminSessionDeleteController;
+use App\Http\Controllers\Session\Admin\SessionUpdateController as AdminSessionUpdateController;
 
 
 /*
@@ -107,22 +126,9 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
     // App 
     Route::group([ 'prefix' => 'dashboard' ], function() {
         Route::group([ 'prefix' => 'admin' ], function() {
+            Route::get('/overview', OverviewController::class);
         });
 
-        Route::group([ 'prefix' => 'attendant' ], function() {
-        });
-
-        Route::group([ 'prefix' => 'exhibitor' ], function() {
-        });
-
-        Route::group([ 'prefix' => 'buyer' ], function() {
-        });
-
-        Route::group([ 'prefix' => 'sponsor' ], function() {
-        });
-
-        Route::group([ 'prefix' => 'speaker' ], function() {
-        });
     });
 
     // App 
@@ -134,6 +140,7 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
             Route::get('categories/{type}', [FormDataController::class, 'categories']);
             Route::get('countries', [FormDataController::class, 'countries']);
             Route::get('users', [FormDataController::class, 'users']);
+            Route::get('multiple-categories', [FormDataController::class, 'multipleCategories']);
         });
     });
 
@@ -141,6 +148,14 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::get('/companies', MyCompanyController::class);
         Route::post('/act-as-company/{company_id}', ActAsCompanyController::class);
         Route::post('/stop-acting-as-company', StopActingAsCompanyController::class);
+    });
+
+    Route::group([ 'prefix' => 'my-eshow' ], function() {
+        Route::get('/bookmarked-companies', [MyEshowController::class, 'myBookmarkedCompanies']);
+        Route::get('/bookmarked-products', [MyEshowController::class, 'myBookmarkedProducts']);
+        Route::get('/bookmarked-services', [MyEshowController::class, 'myBookmarkedServices']);
+        Route::get('/bookmarked-sessions', [MyEshowController::class, 'myBookmarkedSessions']);
+        Route::get('/connections', [MyEshowController::class, 'myConnections']);
     });
 
     // Admin 
@@ -181,6 +196,23 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
             Route::post('/', SponsorStoreController::class);
             Route::post('/{id}', SponsorUpdateController::class);
             Route::delete('/{id}', SponsorDeleteController::class);
+        });
+
+        Route::group([ 'prefix' => 'sessions' ], function() {
+            Route::get('/', AdminSessionListController::class);
+            Route::get('/{id}/edit', AdminSessionEditController::class);
+            Route::post('/', AdminSessionStoreController::class);
+            Route::post('/{id}', AdminSessionUpdateController::class);
+            Route::delete('/{id}', AdminSessionDeleteController::class);
+        });
+
+        Route::group([ 'prefix' => 'services' ], function() {
+            Route::get('/', AdminServiceListController::class);
+            Route::post('/', AdminServiceStoreController::class);
+            Route::get('/{id}/edit', AdminServiceEditController::class);
+            Route::get('/{id}', AdminServiceShowController::class);
+            Route::post('/{id}', AdminServiceUpdateController::class);
+            Route::delete('/{id}', AdminServiceDeleteController::class);
         });
     });
 
@@ -246,7 +278,15 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::get('/', SponsorPublicListController::class);
     });
 
-    
+    // Sessions 
+    Route::group([ 'prefix' => 'sessions' ], function() {
+        Route::get('/', SessionListController::class);
+        Route::get('/upcoming', [SessionListController::class, 'upcoming']);
+        Route::get('/past', [SessionListController::class, 'past']);
+        Route::get('/{id}', SessionShowController::class);
+        Route::post('/{sessionId}/join', SessionJoinController::class);
+    });
+
     // Notifications
     Route::group([ 'prefix' => 'notifications' ], function() {
         Route::get('/', [App\Http\Controllers\API\NotificationController::class, 'index']);

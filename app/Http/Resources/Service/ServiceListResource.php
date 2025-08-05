@@ -15,6 +15,7 @@ class ServiceListResource extends JsonResource
     public function toArray(Request $request): array
     {
         $image = $this->image ? asset('storage/' . $this->image) : null;
+        $company = $this->company;
 
         return [
             'id' => $this->id,
@@ -30,6 +31,11 @@ class ServiceListResource extends JsonResource
                     'name' => $category->name,
                 ];
             }),
+            'company' => [
+                'id' => $company->id,
+                'name' => $company->name,
+                'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
+            ],
             'is_bookmarked' => $this->resource->isBookmarked()
         ];
     }

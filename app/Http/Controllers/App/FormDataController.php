@@ -63,18 +63,52 @@ class FormDataController extends Controller
 
     public function users(Request $request)
     {
-        $users = $this->userRepository
-        ->query()
-        ->whereNull('deleted_at')
-        ->whereDoesntHave('roles', function($query) {
-            $query->where('name', 'admin');
-        })
-        ->select('id', 'name')
-        ->get();
+        if($request->has('roles') && !empty($request->roles)) {
+            $users = $this->userRepository
+            ->query()
+            ->whereNull('deleted_at')
+            ->whereHas('roles', function($query) use ($request) {
+                $query->whereIn('name', $request->roles);
+            })
+            ->select('id', 'name')
+            ->get();
+        } else {
+            $users = $this->userRepository
+            ->query()
+            ->whereNull('deleted_at')
+            ->whereDoesntHave('roles', function($query) {
+                $query->where('name', 'admin');
+            })
+            ->select('id', 'name')
+            ->get();
+        }
 
         return response()->json($users);
     }
 
+    public function multipleCategories(Request $request)
+    {
+        $types = $request->types;
 
+        if (empty($types)) {
+            return response()->json([]);
+        }
+
+        $categories = $this->categoryRepository
+        ->query()
+        ->whereNull('deleted_at')
+        ->whereIn('type', $types)
+        ->select('id', 'name', 'type', 'description')
+        ->get()
+        ->groupBy('type');
+
+        // Ensure all requested types are present in the response
+        $response = [];
+        foreach ($types as $type) {
+            $response[$type] = $categories->get($type, collect());
+        }
+
+        return response()->json($response);
+    }
 
 }

@@ -11,7 +11,7 @@ class Category extends Model
 {
     use HasFactory, SoftDeletes, Bookmarkable;
 
-    protected $fillable = ['name', 'slug', 'type'];
+    protected $fillable = ['name', 'description', 'type', 'status'];
 
     public function companies()
     {
@@ -26,5 +26,12 @@ class Category extends Model
     public function services()
     {
         return $this->belongsToMany(Service::class);
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class, 'type_id')
+                    ->orWhere('topic_id', $this->id)
+                    ->orWhere('language_id', $this->id);
     }
 }

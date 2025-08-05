@@ -28,12 +28,16 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole('attendant');
 
+        $user->profile()->create();
+
         $user = User::create([
             'name' => 'Exhibitor Exhibitor',
             'email' => 'exhibitor@gmail.com',
             'password' => bcrypt('exhibitor123')
         ]);
         $user->assignRole('exhibitor');
+
+        $user->profile()->create();
 
         $user = User::create([
             'name' => 'Buyer Buyer',
@@ -42,6 +46,8 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole('buyer');
 
+        $user->profile()->create();
+
         $user = User::create([
             'name' => 'Sponsor Sponsor',
             'email' => 'sponsor@gmail.com',
@@ -49,12 +55,16 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole('sponsor');
 
+        $user->profile()->create();
+
         $user = User::create([
             'name' => 'Speaker Speaker',
             'email' => 'speaker@gmail.com',
             'password' => bcrypt('speaker123')
         ]);
         $user->assignRole('speaker');
+
+        $user->profile()->create();
 
 
     }

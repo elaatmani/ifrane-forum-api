@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->boolean('is_active')->default(true);
             $table->string('name')->nullable()->default(null);
-            $table->string('description')->nullable()->default(null);
+            $table->mediumText('description')->nullable()->default(null);
             $table->string('image')->nullable()->default(null);
             $table->string('status')->nullable()->default(null);
             $table->dateTime('start_date')->nullable()->default(null);
@@ -26,8 +26,9 @@ return new class extends Migration
             $table->integer('topic_id')->nullable()->default(null);
             $table->integer('language_id')->nullable()->default(null);
             $table->timestamps();
+            $table->softDeletes();
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.

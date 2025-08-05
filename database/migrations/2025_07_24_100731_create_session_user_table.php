@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('session_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('role')->nullable()->default(null);
+            $table->timestamp('joined_at')->nullable()->default(null);
         });
     }
 
@@ -23,7 +24,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
+    { 
         Schema::dropIfExists('session_user');
     }
 };

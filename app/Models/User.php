@@ -105,6 +105,66 @@ class User extends Authenticatable
         return $this->hasMany(UserBookmark::class);
     }
 
+    public function bookmarkedCompanies()
+    {
+        return $this->bookmarks()->where('bookmarkable_type', Company::class);
+    }
+
+    public function bookmarkedProducts()
+    {
+        return $this->bookmarks()->where('bookmarkable_type', Product::class);
+    }
+
+    public function bookmarkedServices()
+    {
+        return $this->bookmarks()->where('bookmarkable_type', Service::class);
+    }
+
+    public function bookmarkedSessions()
+    {
+        return $this->bookmarks()->where('bookmarkable_type', Session::class);
+    }
+
+    /**
+     * Get actual Company models that are bookmarked by this user.
+     */
+    public function bookmarkedCompanyModels()
+    {
+        return Company::whereHas('bookmarks', function($query) {
+            $query->where('user_id', $this->id);
+        });
+    }
+
+    /**
+     * Get actual Product models that are bookmarked by this user.
+     */
+    public function bookmarkedProductModels()
+    {
+        return Product::whereHas('bookmarks', function($query) {
+            $query->where('user_id', $this->id);
+        });
+    }
+
+    /**
+     * Get actual Service models that are bookmarked by this user.
+     */
+    public function bookmarkedServiceModels()
+    {
+        return Service::whereHas('bookmarks', function($query) {
+            $query->where('user_id', $this->id);
+        });
+    }
+
+    /**
+     * Get actual Session models that are bookmarked by this user.
+     */
+    public function bookmarkedSessionModels()
+    {
+        return Session::whereHas('bookmarks', function($query) {
+            $query->where('user_id', $this->id);
+        });
+    }
+
     public function companies()
     {
         return $this->belongsToMany(Company::class)

@@ -15,8 +15,27 @@ class CategoryUpdateController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, $id)
     {
-        //
+        $category = $this->categoryRepository->find($id);
+
+        if (!$category) {
+            return response()->json([
+                'message' => 'Category not found'
+            ], 404);
+        }
+
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'type' => $request->type,
+            'status' => $request->status,
+        ]);
+
+        return response()->json([
+            'category' => $category,
+            'status' => 'SUCCESS',
+            'message' => 'Category updated successfully'
+        ]);
     }
 }

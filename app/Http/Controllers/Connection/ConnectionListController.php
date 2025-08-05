@@ -69,7 +69,7 @@ class ConnectionListController extends Controller
             'meta' => [
                 'stats' => $this->connectionRepository->getConnectionStats($userId),
                 'filters_applied' => $filters,
-                'available_filters' => $this->getAvailableFilters(),
+                // 'available_filters' => $this->getAvailableFilters(),
             ],
             'code' => 'SUCCESS'
         ];

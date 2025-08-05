@@ -72,7 +72,6 @@ class CategorySeeder extends Seeder
         foreach ($categories_products as $category) {
             Category::create([
                 'name' => $category,
-                'slug' => Str::slug($category),
                 'type' => 'product',
             ]);
         }
@@ -145,7 +144,6 @@ class CategorySeeder extends Seeder
         foreach ($categories_services as $category) {
             Category::create([
                 'name' => $category,
-                'slug' => Str::slug($category),
                 'type' => 'service',
             ]);
         }
@@ -235,7 +233,6 @@ class CategorySeeder extends Seeder
         foreach ($categories_companies as $category) {
             Category::create([
                 'name' => $category,
-                'slug' => Str::slug($category),
                 'type' => 'company',
             ]);
         }
