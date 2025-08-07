@@ -319,5 +319,33 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::get('/', OnboardingController::class);
         Route::post('/', [OnboardingController::class, 'update']);
     });
+
+    // Messaging
+    Route::group([ 'prefix' => 'messaging' ], function() {
+        // Conversations
+        Route::get('/conversations', [App\Http\Controllers\API\ConversationController::class, 'index']);
+        Route::get('/conversations/direct/{user}', [App\Http\Controllers\API\ConversationController::class, 'getDirectConversation']);
+        Route::get('/conversations/session/{session}', [App\Http\Controllers\API\ConversationController::class, 'getSessionConversation']);
+        Route::get('/conversations/company/{company}', [App\Http\Controllers\API\ConversationController::class, 'getCompanyConversation']);
+        Route::get('/conversations/{conversation}/messages', [App\Http\Controllers\API\ConversationController::class, 'getMessages']);
+        Route::post('/conversations/{conversation}/read', [App\Http\Controllers\API\ConversationController::class, 'markAsRead']);
+        Route::get('/conversations/{conversation}/participants', [App\Http\Controllers\API\ConversationController::class, 'getParticipants']);
+        Route::get('/conversations/{conversation}/unread-count', [App\Http\Controllers\API\ConversationController::class, 'getUnreadCount']);
+        
+        // Messages
+        Route::post('/conversations/{conversation}/messages/text', [App\Http\Controllers\API\MessageController::class, 'sendTextMessage']);
+        Route::post('/conversations/{conversation}/messages/file', [App\Http\Controllers\API\MessageController::class, 'sendFileMessage']);
+        
+        // Call-related messages
+        Route::post('/conversations/{conversation}/messages/missed-call', [App\Http\Controllers\API\MessageController::class, 'sendMissedCallMessage']);
+        Route::post('/conversations/{conversation}/messages/video-call-request', [App\Http\Controllers\API\MessageController::class, 'sendVideoCallRequest']);
+        Route::post('/conversations/{conversation}/messages/voice-call-request', [App\Http\Controllers\API\MessageController::class, 'sendVoiceCallRequest']);
+        Route::post('/conversations/{conversation}/messages/call-ended', [App\Http\Controllers\API\MessageController::class, 'sendCallEndedMessage']);
+        Route::post('/conversations/{conversation}/messages/call-rejected', [App\Http\Controllers\API\MessageController::class, 'sendCallRejectedMessage']);
+        Route::post('/conversations/{conversation}/messages/call-accepted', [App\Http\Controllers\API\MessageController::class, 'sendCallAcceptedMessage']);
+        
+        Route::delete('/messages/{message}', [App\Http\Controllers\API\MessageController::class, 'deleteMessage']);
+        Route::get('/conversations/{conversation}/unread-count', [App\Http\Controllers\API\MessageController::class, 'getUnreadCount']);
+    });
     
 });

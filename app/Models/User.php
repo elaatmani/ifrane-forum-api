@@ -319,4 +319,46 @@ class User extends Authenticatable
             ];
         });
     }
+
+    /**
+     * Get user's conversations
+     */
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_users')
+                    ->withPivot('last_read_at', 'joined_at')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get user's direct conversations
+     */
+    public function directConversations()
+    {
+        return $this->conversations()->where('type', 'direct');
+    }
+
+    /**
+     * Get user's session conversations
+     */
+    public function sessionConversations()
+    {
+        return $this->conversations()->where('type', 'session');
+    }
+
+    /**
+     * Get user's company conversations
+     */
+    public function companyConversations()
+    {
+        return $this->conversations()->where('type', 'company');
+    }
+
+    /**
+     * Get messages sent by user
+     */
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
 }

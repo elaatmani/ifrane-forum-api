@@ -63,4 +63,11 @@ class Company extends Model
         return $this->belongsTo(Country::class);
     }
 
+    /**
+     * Get company conversations
+     */
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class)->where('type', 'company');
+    }
 }

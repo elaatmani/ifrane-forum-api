@@ -7,6 +7,8 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use App\Models\Conversation;
+use App\Models\Message;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,15 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Custom route model binding for UUID models
+        Route::bind('conversation', function ($value) {
+            return Conversation::where('id', $value)->firstOrFail();
+        });
+
+        Route::bind('message', function ($value) {
+            return Message::where('id', $value)->firstOrFail();
         });
 
         $this->routes(function () {

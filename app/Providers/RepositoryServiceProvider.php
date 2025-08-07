@@ -29,6 +29,10 @@ use App\Repositories\Contracts\SponsorRepositoryInterface;
 use App\Repositories\Contracts\UserConnectionRepositoryInterface;
 use App\Repositories\Contracts\BookmarkRepositoryInterface;
 use App\Repositories\Contracts\SessionRepositoryInterface;
+use App\Repositories\Contracts\ConversationRepositoryInterface;
+use App\Repositories\Contracts\MessageRepositoryInterface;
+use App\Repositories\Eloquent\ConversationRepository;
+use App\Repositories\Eloquent\MessageRepository;
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -57,5 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserConnectionRepositoryInterface::class, UserConnectionRepository::class);
         $this->app->bind(BookmarkRepositoryInterface::class, BookmarkRepository::class);
         $this->app->bind(SessionRepositoryInterface::class, SessionRepository::class);
+        $this->app->bind(ConversationRepositoryInterface::class, ConversationRepository::class);
+        $this->app->bind(MessageRepositoryInterface::class, MessageRepository::class);
     }
 }

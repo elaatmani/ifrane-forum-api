@@ -50,4 +50,12 @@ class Session extends Model
     {
         return $this->belongsTo(Category::class, 'language_id')->where('type', 'language');
     }
+
+    /**
+     * Get session conversation
+     */
+    public function conversation()
+    {
+        return $this->hasOne(Conversation::class)->where('type', 'session');
+    }
 }
