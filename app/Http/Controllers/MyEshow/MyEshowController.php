@@ -26,7 +26,13 @@ class MyEshowController extends Controller
     }
 
     public function mySessions() {
+        $user = auth()->user();
 
+        $sessions = $user->sessions()->paginate($request->per_page ?? 10);
+
+        $sessions->getCollection()->transform(fn($session) => new SessionListResource($session));
+
+        return response()->json($sessions);
     }
 
     public function myBookmarkedCompanies(Request $request) {

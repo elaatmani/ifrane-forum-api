@@ -16,32 +16,16 @@ class SessionListResource extends JsonResource
     {
         $image = $this->image ? asset('storage/' . $this->image) : null;
 
-        // Improved date handling with better null checks and type safety
-        $startDate = null;
-        $startTime = null;
-        $endDate = null;
-        $endTime = null;
-
-        if ($this->start_date && $this->start_date instanceof \Carbon\Carbon) {
-            $startDate = $this->start_date->format('Y-m-d');
-            $startTime = $this->start_date->format('H:i');
-        }
-
-        if ($this->end_date && $this->end_date instanceof \Carbon\Carbon) {
-            $endDate = $this->end_date->format('Y-m-d');
-            $endTime = $this->end_date->format('H:i');
-        }
-
         return [
             "id" => $this->id,
             "name" => $this->name,
             "description" => $this->description,
             "image" => $image,
             "status" => $this->status,
-            "start_date" => $startDate,
-            "start_time" => $startTime,
-            "end_date" => $endDate,
-            "end_time" => $endTime,
+            "start_date" => explode(' ', $this->start_date)[0],
+            "start_time" => explode(' ', $this->start_date)[1],
+            "end_date" => explode(' ', $this->end_date)[0],
+            "end_time" => explode(' ', $this->end_date)[1],
             "link" => $this->link,
             "topic" => $this->topic?->name,
             "language" => $this->language?->name,
@@ -53,7 +37,7 @@ class SessionListResource extends JsonResource
                     'name' => $user->name,
                     'profile_image' => $user->profile_image,
                 ];
-            }),
+            })->values(),
             "is_joined" => auth()->check() ? $this->users->contains('id', auth()->id()) : false,
         ];
     }

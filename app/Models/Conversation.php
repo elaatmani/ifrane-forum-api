@@ -119,7 +119,14 @@ class Conversation extends Model
 
     public function getUnreadCount(User $user)
     {
-        $lastRead = $this->users()->where('user_id', $user->id)->first()->pivot->last_read_at;
+        $userPivot = $this->users()->where('user_id', $user->id)->first();
+        
+        if (!$userPivot) {
+            // User is not a participant in this conversation
+            return 0;
+        }
+        
+        $lastRead = $userPivot->pivot->last_read_at;
         
         if (!$lastRead) {
             // Count messages from other users only

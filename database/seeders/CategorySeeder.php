@@ -236,5 +236,86 @@ class CategorySeeder extends Seeder
                 'type' => 'company',
             ]);
         }
+
+    $languages = [
+        'English' => 'english',
+        'French' => 'french',
+        'Spanish' => 'spanish',
+        'Portuguese' => 'portuguese'
+    ];
+
+    foreach ($languages as $name => $code) {
+        Category::create([
+            'name' => $name,
+            'description' => "Language: $name",
+            'type' => 'language',
+        ]);
+    }
+
+    // Conference Types
+    $types = [
+        'Announcement' => 'announcement',
+        'Break' => 'break',
+        'Demo' => 'demo',
+        'Interview' => 'interview',
+        'Keynote' => 'keynote',
+        'Panel Discussion' => 'panel',
+        'Presentation' => 'presentation',
+        'Q&A Session' => 'qa-session',
+        'Workshop' => 'workshop',
+        'Networking' => 'networking',
+        'Roundtable' => 'roundtable',
+        'Case Study' => 'case-study'
+    ];
+
+    foreach ($types as $name => $code) {
+        Category::create([
+            'name' => $name,
+            'description' => "Conference type: $name",
+            'type' => 'type',
+        ]);
+    }
+
+    // Topics
+    $topics = [
+        'Automation' => 'automation',
+        'Blockchain' => 'blockchain',
+        'Branding' => 'branding',
+        'Collaboration' => 'collaboration',
+        'Consumer' => 'consumer',
+        'Digital' => 'digital',
+        'Distribution' => 'distribution',
+        'E-commerce' => 'e-commerce',
+        'Economics' => 'economics',
+        'Finance' => 'finance',
+        'Industry 4.0' => 'industry-4-0',
+        'Logistics' => 'logistics',
+        'Marketing' => 'marketing',
+        'Markets' => 'markets',
+        'Packaging' => 'packaging',
+        'Regulations' => 'regulations',
+        'Services' => 'services',
+        'Technology' => 'technology',
+        'Trends' => 'trends',
+        'Human Resources' => 'human-resources',
+        'Innovation' => 'innovation',
+        'Strategy' => 'strategy',
+        'Supply Chain' => 'supply-chain',
+        'Sustainability' => 'sustainability',
+        'Artificial Intelligence' => 'artificial-intelligence',
+        'Machine Learning' => 'machine-learning',
+        'Data Analytics' => 'data-analytics',
+        'Cybersecurity' => 'cybersecurity',
+        'Cloud Computing' => 'cloud-computing',
+        'Internet of Things' => 'internet-of-things'
+    ];
+
+    foreach ($topics as $name => $code) {
+        Category::create([
+            'name' => $name,
+            'description' => "Conference topic: $name",
+            'type' => 'topic',
+        ]);
+    }
     }
 }

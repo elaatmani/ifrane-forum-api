@@ -19,7 +19,10 @@ class SessionListController extends Controller
     public function __invoke(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        $sessions = $this->sessionRepository->paginate($perPage);
+        $sessions = $this->sessionRepository
+        ->query()
+        ->where('status', 'scheduled')
+        ->paginate($perPage);
 
         $sessions->getCollection()->transform(function ($session) {
             return new SessionListResource($session);

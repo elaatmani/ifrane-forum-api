@@ -29,6 +29,7 @@ class User extends Authenticatable
         'last_action_at',
         'is_active',
         'is_completed',
+        'acting_as_role',
         'profile_image'
     ];
 
@@ -169,6 +170,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Company::class)
                     ->withPivot('role');
+    }
+
+    /**
+     * Get the sessions that this user has joined.
+     */
+    public function sessions()
+    {
+        return $this->belongsToMany(Session::class)
+                    ->withPivot('role', 'joined_at')->where('role', 'attendant');
     }
 
     /**

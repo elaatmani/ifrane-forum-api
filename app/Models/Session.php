@@ -25,8 +25,6 @@ class Session extends Model
     ];
 
     protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
         'is_active' => 'boolean',
     ];
 

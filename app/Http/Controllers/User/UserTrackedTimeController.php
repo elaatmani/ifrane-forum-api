@@ -6,8 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\StoreUserRequest;
-use App\Http\Resources\User\UserListResource;
 use App\Repositories\Contracts\UserRepositoryInterface;
 
 class UserTrackedTimeController extends Controller

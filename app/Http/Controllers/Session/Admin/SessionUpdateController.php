@@ -7,10 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Session\SessionUpdateRequest;
 use App\Repositories\Contracts\SessionRepositoryInterface;
 use App\Http\Resources\Session\Admin\SessionResource;
+use App\Services\MessagingService;
+
 class SessionUpdateController extends Controller
 {
-    public function __construct(protected SessionRepositoryInterface $sessionRepository)
-    {
+    public function __construct(
+        protected SessionRepositoryInterface $sessionRepository,
+        protected MessagingService $messagingService
+    ) {
     }
 
     /**
@@ -19,7 +23,6 @@ class SessionUpdateController extends Controller
     public function __invoke(SessionUpdateRequest $request, $id)
     {
         $data = $request->validated();
-
 
         if($request->has('image') && $request->file('image')) {
             $image = $request->file('image');
@@ -42,6 +45,19 @@ class SessionUpdateController extends Controller
                     $speakerData[$speakerId] = ['role' => 'speaker', 'joined_at' => now()];
                 }
                 $session->users()->attach($speakerData);
+            }
+
+            // Ensure conversation exists and add new speakers to it
+            $conversation = $this->messagingService->getSessionConversation($session);
+            
+            // Add new speakers to the conversation if they're not already there
+            if (!empty($data['speakers'])) {
+                foreach ($data['speakers'] as $speakerId) {
+                    $user = \App\Models\User::find($speakerId);
+                    if ($user && !$this->messagingService->canUserAccessConversation($conversation, $user)) {
+                        $this->messagingService->addUserToSessionChat($session, $user);
+                    }
+                }
             }
         }
 

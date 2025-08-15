@@ -26,7 +26,7 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
 
         try {
             // Check if conversation already exists
-            $conversation = $this->model->direct()
+            $conversation = $this->model->where('type', 'direct')
                 ->whereHas('users', function($q) use ($user1) {
                     $q->where('user_id', $user1->id);
                 })
@@ -63,7 +63,8 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
         DB::beginTransaction();
 
         try {
-            $conversation = $this->model->session()
+            // Query conversations table directly with session type and session_id
+            $conversation = $this->model->where('type', 'session')
                 ->where('session_id', $session->id)
                 ->first();
 
@@ -72,12 +73,19 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
                     'type' => 'session',
                     'name' => $session->name . ' Chat',
                     'session_id' => $session->id,
-                    'created_by' => $session->created_by ?? auth()->id(),
+                    'created_by' => auth()->id(),
                     'is_active' => true
                 ]);
 
-                // Add session participants
+                // Add session participants and current user
                 $sessionUsers = $session->users()->pluck('user_id')->toArray();
+                $currentUserId = auth()->id();
+                
+                // Ensure current user is included
+                if (!in_array($currentUserId, $sessionUsers)) {
+                    $sessionUsers[] = $currentUserId;
+                }
+                
                 if (!empty($sessionUsers)) {
                     $conversation->users()->attach($sessionUsers);
                 }
@@ -100,7 +108,7 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
         DB::beginTransaction();
 
         try {
-            $conversation = $this->model->company()
+            $conversation = $this->model->where('type', 'company')
                 ->where('company_id', $company->id)
                 ->whereHas('users', function($q) use ($user) {
                     $q->where('user_id', $user->id);
@@ -118,6 +126,10 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
                 // Add user and company members
                 $companyMembers = $company->users()->pluck('id')->toArray();
                 $participants = array_merge([$user->id], $companyMembers);
+                
+                // Ensure no duplicate user IDs
+                $participants = array_unique($participants);
+                
                 $conversation->users()->attach($participants);
             }
 
@@ -135,7 +147,7 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
      */
     public function getUserDirectConversations(User $user, int $perPage = 20)
     {
-        return $this->model->direct()
+        return $this->model->where('type', 'direct')
             ->whereHas('users', function($q) use ($user) {
                 $q->where('user_id', $user->id);
             })
@@ -152,7 +164,7 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
      */
     public function getUserSessionConversations(User $user, int $perPage = 20)
     {
-        return $this->model->session()
+        return $this->model->where('type', 'session')
             ->whereHas('users', function($q) use ($user) {
                 $q->where('user_id', $user->id);
             })
@@ -169,7 +181,7 @@ class ConversationRepository extends BaseRepository implements ConversationRepos
      */
     public function getUserCompanyConversations(User $user, int $perPage = 20)
     {
-        return $this->model->company()
+        return $this->model->where('type', 'company')
             ->whereHas('users', function($q) use ($user) {
                 $q->where('user_id', $user->id);
             })

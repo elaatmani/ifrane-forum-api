@@ -10,10 +10,11 @@ use App\Http\Controllers\User\UserListController;
 
 
 use App\Http\Controllers\User\UserShowController;
+use App\Http\Controllers\Auth\ActAsRoleController;
 use App\Http\Controllers\User\UserStoreController;
 use App\Http\Controllers\Auth\OnboardingController;
-use App\Http\Controllers\MyEshow\MyEshowController;
 
+use App\Http\Controllers\MyEshow\MyEshowController;
 use App\Http\Controllers\User\UserActiveController;
 use App\Http\Controllers\User\UserByRoleController;
 use App\Http\Controllers\User\UserDeleteController;
@@ -25,8 +26,8 @@ use App\Http\Controllers\Service\ServiceEditController;
 use App\Http\Controllers\Service\ServiceListController;
 use App\Http\Controllers\Service\ServiceShowController;
 use App\Http\Controllers\Session\SessionJoinController;
-use App\Http\Controllers\Session\SessionShowController;
 
+use App\Http\Controllers\Session\SessionShowController;
 use App\Http\Controllers\Sponsor\SponsorListController;
 use App\Http\Controllers\Service\ServiceStoreController;
 use App\Http\Controllers\Sponsor\SponsorStoreController;
@@ -47,17 +48,17 @@ use App\Http\Controllers\Community\CommunityListController;
 use App\Http\Controllers\Document\DocumentDeleteController;
 use App\Http\Controllers\Document\DocumentUpdateController;
 use App\Http\Controllers\Auth\StopActingAsCompanyController;
-use App\Http\Controllers\Community\CommunityMemberController;
 
 // Session Controllers
+use App\Http\Controllers\Community\CommunityMemberController;
 use App\Http\Controllers\Company\Admin\CompanyEditController;
 use App\Http\Controllers\Company\Admin\CompanyListController;
 use App\Http\Controllers\Company\Admin\CompanyShowController;
 use App\Http\Controllers\Connection\ConnectionListController;
 use App\Http\Controllers\Sponsor\SponsorPublicListController;
+
+
 use App\Http\Controllers\Company\Admin\CompanyStoreController;
-
-
 use App\Http\Controllers\Category\Admin\CategoryListController;
 use App\Http\Controllers\Company\Admin\CompanyDeleteController;
 use App\Http\Controllers\Company\Admin\CompanyUpdateController;
@@ -78,9 +79,9 @@ use App\Http\Controllers\Company\CompanyShowController as PublicCompanyShowContr
 use App\Http\Controllers\Product\ProductEditController as PublicProductEditController;
 use App\Http\Controllers\Product\ProductListController as PublicProductListController;
 use App\Http\Controllers\Product\ProductShowController as PublicProductShowController;
-use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
 
 // Connection Controllers
+use App\Http\Controllers\Product\ProductStoreController as PublicProductStoreController;
 use App\Http\Controllers\Product\ProductDeleteController as PublicProductDeleteController;
 use App\Http\Controllers\Product\ProductUpdateController as PublicProductUpdateController;
 use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
@@ -111,14 +112,19 @@ use App\Http\Controllers\Session\Admin\SessionUpdateController as AdminSessionUp
 |
 */
 
-Route::middleware(['auth:sanctum', 'check.status'])->get('/auth/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::middleware(['auth:sanctum', 'check.status'])->get('/auth/current', CurrentSessionDataController::class);
 
 
 Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() {
+    
+    Route::group(['prefix' => 'auth'], function() {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
+
+        Route::get('/current', CurrentSessionDataController::class);
+
+        Route::post('/act-as-role/{role}', ActAsRoleController::class);
+    });
 
     // Push auth
     Route::post('pusher', PusherController::class);
@@ -156,6 +162,7 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::get('/bookmarked-services', [MyEshowController::class, 'myBookmarkedServices']);
         Route::get('/bookmarked-sessions', [MyEshowController::class, 'myBookmarkedSessions']);
         Route::get('/connections', [MyEshowController::class, 'myConnections']);
+        Route::get('/sessions', [MyEshowController::class, 'mySessions']);
     });
 
     // Admin 

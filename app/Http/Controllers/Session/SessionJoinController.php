@@ -5,11 +5,17 @@ namespace App\Http\Controllers\Session;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Session\SessionJoinRequest;
 use App\Models\Session;
+use App\Services\MessagingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SessionJoinController extends Controller
 {
+    public function __construct(
+        protected MessagingService $messagingService
+    ) {
+    }
+
     /**
      * Handle the incoming request.
      */
@@ -24,6 +30,9 @@ class SessionJoinController extends Controller
         if ($isAttending) {
             // User is already attending, so leave the session
             $session->users()->detach($user->id);
+
+            // Remove user from session conversation
+            $this->messagingService->removeUserFromSessionChat($session, $user);
 
             return response()->json([
                 'message' => 'Successfully left the session',
@@ -40,6 +49,9 @@ class SessionJoinController extends Controller
                 'role' => 'attendant',
                 'joined_at' => now()
             ]);
+
+            // Add user to session conversation
+            $this->messagingService->addUserToSessionChat($session, $user);
 
             return response()->json([
                 'message' => 'Successfully joined the session',

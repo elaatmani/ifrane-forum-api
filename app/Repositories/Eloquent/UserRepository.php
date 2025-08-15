@@ -18,8 +18,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         $user = parent::create($data);
 
-        if($user) {
-            $user->assignRole(Role::where('id', $data['role_id'])->first()->name);
+        if($user && isset($data['roles'])) {
+            foreach ($data['roles'] as $roleId) {
+                $role = Role::where('id', $roleId)->first();
+                if ($role) {
+                    $user->assignRole($role->name);
+                }
+            }
         }
 
         return $user;
@@ -31,6 +36,19 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         if($user) {
             $user->update($data);
+        }
+
+        if($user && isset($data['roles'])) {
+            // Remove all current roles
+            $user->roles()->detach();
+
+            // Assign only the roles specified in the data
+            foreach ($data['roles'] as $roleId) {
+                $role = Role::where('id', $roleId)->first();
+                if ($role) {
+                    $user->assignRole($role->name);
+                }
+            }
         }
 
         return $user;
@@ -376,5 +394,36 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
 
         return 0;
+    }
+
+
+    public function actAsRole($role)
+    {
+
+        $user = auth()->user();
+
+        if (is_numeric($role)) {
+            $role = Role::find($role);
+
+            if(!$role) {
+                return false;
+            }
+
+            $role = $role->name;
+        }
+
+        if(!$user) {
+            return false;
+        }
+
+        if(!$user->hasRole($role)) {
+            return false;
+        }
+
+        $user->update([
+            'acting_as_role' => $role
+        ]);
+
+        return true;
     }
 }

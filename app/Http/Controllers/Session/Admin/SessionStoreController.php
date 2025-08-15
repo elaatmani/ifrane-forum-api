@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Session\SessionStoreRequest;
 use App\Repositories\Contracts\SessionRepositoryInterface;
 use App\Http\Resources\Session\Admin\SessionResource;
+use App\Services\MessagingService;
 
 class SessionStoreController extends Controller
 {
-    public function __construct(protected SessionRepositoryInterface $sessionRepository)
-    {
+    public function __construct(
+        protected SessionRepositoryInterface $sessionRepository,
+        protected MessagingService $messagingService
+    ) {
     }
 
     /**
@@ -36,6 +39,19 @@ class SessionStoreController extends Controller
                 $speakerData[$speakerId] = ['role' => 'speaker', 'joined_at' => now()];
             }
             $session->users()->attach($speakerData);
+        }
+
+        // Create conversation for the session and add speakers to it
+        $conversation = $this->messagingService->getSessionConversation($session);
+        
+        // Add speakers to the conversation
+        if (!empty($data['speakers'])) {
+            foreach ($data['speakers'] as $speakerId) {
+                $user = \App\Models\User::find($speakerId);
+                if ($user) {
+                    $this->messagingService->addUserToSessionChat($session, $user);
+                }
+            }
         }
 
         return response()->json(SessionResource::make($session));

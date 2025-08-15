@@ -26,6 +26,12 @@ class UserListResource extends JsonResource
             'is_active' => $this->is_active,
             'profile_image' => $this->profile_image,
             'role' => Str::title(str_replace('_', ' ', $this->roles->first()->name ?? 'No Role')),
+            'roles' => $this->roles->map(function ($role) {
+                return [
+                    'id' => $role->id,
+                    'name' => ucfirst($role->name),
+                ];
+            }),
             'updated_at' => $this->updated_at,
         ];
     }

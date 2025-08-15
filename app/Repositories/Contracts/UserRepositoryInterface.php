@@ -19,4 +19,6 @@ interface UserRepositoryInterface extends BaseRepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder
      */
     public function getSimilarUsers(User $user, array $params = [], bool $get = true);
+
+    public function actAsRole($role);
 }
