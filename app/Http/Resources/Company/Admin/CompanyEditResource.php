@@ -14,8 +14,8 @@ class CompanyEditResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $logo = $this->logo ? asset('storage/' . $this->logo) : null;
-        $background_image = $this->background_image ? asset('storage/' . $this->background_image) : null;
+        $logo = $this->logo;
+        $background_image = $this->background_image;
 
         return [
             'id' => $this->id,

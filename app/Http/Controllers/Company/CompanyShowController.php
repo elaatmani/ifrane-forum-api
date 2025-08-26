@@ -27,4 +27,33 @@ class CompanyShowController extends Controller
             ]
         );
     }
+
+    public function getCompanyServices(Request $request)
+    {
+        $company = $this->companyRepository->find($request->id);
+
+        $services = $this->companyRepository->getCompanyServices($company);
+
+        return response()->json(
+            [
+                'code' => 'SUCCESS',
+                'data' => $services,
+            ]
+        );
+    }
+
+
+    public function getCompanyProducts(Request $request)
+    {
+        $company = $this->companyRepository->find($request->id);
+
+        $products = $this->companyRepository->getCompanyProducts($company);
+
+        return response()->json(
+            [
+                'code' => 'SUCCESS',
+                'data' => $products,
+            ]
+        );
+    }
 }

@@ -67,12 +67,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      * Get community users based on role relationships
      * 
      * Role Mappings:
-     * - Admin: All users (admin, attendant, exhibitor, buyer, sponsor, speaker)
-     * - Exhibitor: buyer, attendant, sponsor (potential customers and supporters)
+     * - Admin: All users (admin, attendee, exhibitor, buyer, sponsor, speaker)
+     * - Exhibitor: buyer, attendee, sponsor (potential customers and supporters)
      * - Buyer: exhibitor, speaker (sources of products and knowledge)
-     * - Attendant: speaker, exhibitor, attendant (learning and networking)
-     * - Speaker: attendant, sponsor, exhibitor (audience and collaborators)
-     * - Sponsor: exhibitor, speaker, attendant (those they support)
+     * - attendee: speaker, exhibitor, attendee (learning and networking)
+     * - Speaker: attendee, sponsor, exhibitor (audience and collaborators)
+     * - Sponsor: exhibitor, speaker, attendee (those they support)
      * 
      * @param User $user The user to find community for
      * @param bool $get Whether to execute the query and return results (true) or return query builder (false)
@@ -99,24 +99,24 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         // Define role community mappings
         // $roleCommunityMap = [
-        //     'admin' => ['admin', 'attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
-        //     // 'exhibitor' => ['buyer', 'attendant', 'sponsor'],
-        //     'exhibitor' => ['attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
+        //     'admin' => ['admin', 'attendee', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
+        //     // 'exhibitor' => ['buyer', 'attendee', 'sponsor'],
+        //     'exhibitor' => ['attendee', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
         //     'buyer' => ['exhibitor', 'speaker'],
-        //     'attendant' => ['speaker', 'exhibitor', 'attendant'],
-        //     'speaker' => ['attendant', 'sponsor', 'exhibitor'],
-        //     'sponsor' => ['exhibitor', 'speaker', 'attendant'],
+        //     'attendee' => ['speaker', 'exhibitor', 'attendee'],
+        //     'speaker' => ['attendee', 'sponsor', 'exhibitor'],
+        //     'sponsor' => ['exhibitor', 'speaker', 'attendee'],
         // ];
 
         // for testing we allowed all
         $roleCommunityMap = [
-            'admin' => ['admin', 'attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
-            // 'exhibitor' => ['buyer', 'attendant', 'sponsor'],
-            'exhibitor' => ['admin', 'attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
-            'buyer' => ['admin', 'attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
-            'attendant' => ['admin', 'attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
-            'speaker' => ['admin', 'attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
-            'sponsor' => ['admin', 'attendant', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
+            'admin' => ['admin', 'attendee', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
+            // 'exhibitor' => ['buyer', 'attendee', 'sponsor'],
+            'exhibitor' => ['attendee', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
+            'buyer' => ['admin', 'attendee', 'exhibitor', 'buyer', 'sponsor', 'speaker'],
+            'attendee' => ['attendee', 'exhibitor', 'speaker'],
+            'speaker' => ['attendee', 'exhibitor', 'sponsor', 'speaker'],
+            'sponsor' => ['attendee', 'exhibitor', 'speaker', 'sponsor'],
         ];
 
         // Get user's primary role

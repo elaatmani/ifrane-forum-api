@@ -14,8 +14,8 @@ class CompanyListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $logo = $this->logo ? asset('storage/' . $this->logo) : null;
-        $background_image = $this->background_image ? asset('storage/' . $this->background_image) : null;
+        $logo = $this->logo;
+        $background_image = $this->background_image;
         
         return [
             'id' => $this->id,
@@ -26,7 +26,7 @@ class CompanyListResource extends JsonResource
             'logo' => $logo,
             'background_image' => $background_image,
             'status' => $this->status,
-            'country' => $this->country->name ?? null,
+            'country' => $this->country?->name ?? null,
             'categories' => [
                 'count' => $this->categories->count(),
                 'items' => $this->categories->take(3)->map(fn($category) => [

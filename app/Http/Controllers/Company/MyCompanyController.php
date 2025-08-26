@@ -28,8 +28,8 @@ class MyCompanyController extends Controller
                 'id' => $company->id,
                 'name' => $company->name,
                 'description' => $company->description,
-                'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
-                'background' => $company->background_image ? asset('storage/' . $company->background_image) : null,
+                'logo' => $company->logo,
+                'background' => $company->background_image,
                 'created_at' => $company->created_at
             ];
         });

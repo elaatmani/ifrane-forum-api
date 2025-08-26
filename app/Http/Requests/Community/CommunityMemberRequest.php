@@ -43,7 +43,7 @@ class CommunityMemberRequest extends FormRequest
         }
 
         // Define allowed roles for current user to access community members
-        $allowedRoles = ['admin', 'exhibitor', 'buyer', 'attendant', 'speaker', 'sponsor'];
+        $allowedRoles = ['admin', 'exhibitor', 'buyer', 'attendee', 'speaker', 'sponsor'];
         
         // Check if current user has any of the defined roles
         if (!$currentUser->hasAnyRole($allowedRoles)) {

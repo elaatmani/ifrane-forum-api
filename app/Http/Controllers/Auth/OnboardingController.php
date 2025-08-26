@@ -31,6 +31,10 @@ class OnboardingController extends Controller
 
         $profile = $user->profile;
 
+        if(!$profile) {
+            $profile = $user->profile()->create();
+        }
+
         return response()->json([
             'profile' => [
                 'full_name' => $user->name,

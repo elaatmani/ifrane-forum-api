@@ -27,4 +27,8 @@ interface CompanyRepositoryInterface extends BaseRepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
     public function getSimilarCompanies(Company $company, array $params = [], bool $get = true);
+
+    public function getCompanyServices(Company $company);
+
+    public function getCompanyProducts(Company $company);
 }

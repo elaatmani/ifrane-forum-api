@@ -421,11 +421,11 @@ class CompanyRepository extends BaseRepository implements CompanyRepositoryInter
 
         // Define compatible role combinations for business relationships
         $roleCompatibility = [
-            'exhibitor' => ['buyer', 'attendant', 'sponsor'],
+            'exhibitor' => ['buyer', 'attendee', 'sponsor'],
             'buyer' => ['exhibitor', 'speaker'],
-            'speaker' => ['attendant', 'sponsor', 'exhibitor'],
-            'sponsor' => ['exhibitor', 'speaker', 'attendant'],
-            'attendant' => ['speaker', 'exhibitor'],
+            'speaker' => ['attendee', 'sponsor', 'exhibitor'],
+            'sponsor' => ['exhibitor', 'speaker', 'attendee'],
+            'attendee' => ['speaker', 'exhibitor'],
         ];
 
         $score = 0;
@@ -441,5 +441,39 @@ class CompanyRepository extends BaseRepository implements CompanyRepositoryInter
         }
 
         return min($score, 6); // Cap the maximum score to prevent over-weighting
+    }
+
+    public function getCompanyServices(Company $company)
+    {
+        $services = $company->services()
+        ->limit(10)
+        ->where('status', 'active')
+        ->select('id', 'name', 'description', 'image')
+        ->get();
+
+        // Transform image URLs to proper storage asset URLs
+        return $services->map(function ($service) {
+            if ($service->image) {
+                $service->image = asset('storage/' . $service->image);
+            }
+            return $service;
+        });
+    }
+
+    public function getCompanyProducts(Company $company)
+    {
+        $products = $company->products()
+        ->limit(10)
+        // ->where('status', 'active')
+        ->select('id', 'name', 'description', 'thumbnail_url')
+        ->get();
+
+        // Transform thumbnail URLs to proper storage asset URLs
+        return $products->map(function ($product) {
+            if ($product->thumbnail_url) {
+                $product->thumbnail_url = asset('storage/' . $product->thumbnail_url);
+            }
+            return $product;
+        });
     }
 }

@@ -14,12 +14,12 @@ class CompanyListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $logo = $this->logo ? asset('storage/' . $this->logo) : null;
+        $logo = $this->logo;
         return [
             'id' => $this->id,
             'name' => $this->name,
             'logo' => $logo,
-            'country' => $this->country->name,
+            'country' => $this->country?->name,
             'is_bookmarked' => $this->resource->isBookmarked()
         ];
     }

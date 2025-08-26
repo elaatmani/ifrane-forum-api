@@ -33,11 +33,7 @@ class CompanyDataService
      */
     public function getCompanyLogo(?Company $company): ?string
     {
-        if (!$company || !$company->logo) {
-            return null;
-        }
-
-        return asset('storage/' . $company->logo);
+        return $company->logo;
     }
 
     /**

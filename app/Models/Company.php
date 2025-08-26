@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Bookmarkable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Company extends Model
 {
@@ -69,5 +70,27 @@ class Company extends Model
     public function conversations()
     {
         return $this->hasMany(Conversation::class)->where('type', 'company');
+    }
+
+    public function getLogoAttribute($value)
+    {
+        if($value && strpos($value, 'logos') !== false){
+            return asset('storage/' . $value);
+        } else if($value){
+            return url($value);
+        }
+
+        return null;
+    }
+
+    public function getBackgroundImageAttribute($value)
+    {
+        if($value && strpos($value, 'backgrounds') !== false){
+            return asset('storage/' . $value);
+        } else if($value){
+            return url($value);
+        }   
+
+        return null;
     }
 }

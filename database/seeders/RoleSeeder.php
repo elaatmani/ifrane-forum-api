@@ -39,7 +39,7 @@ class RoleSeeder extends Seeder
             ],
 
             [
-                'name' => 'attendant',
+                'name' => 'attendee',
                 'permissions' => []
             ]
             ,

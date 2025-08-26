@@ -24,7 +24,7 @@ class SessionJoinRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // No validation rules needed since role is always 'attendant'
+            // No validation rules needed since role is always 'attendee'
         ];
     }
 

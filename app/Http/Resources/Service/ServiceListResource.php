@@ -34,7 +34,7 @@ class ServiceListResource extends JsonResource
             'company' => [
                 'id' => $company->id,
                 'name' => $company->name,
-                'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
+                'logo' => $company->logo,
             ],
             'is_bookmarked' => $this->resource->isBookmarked()
         ];

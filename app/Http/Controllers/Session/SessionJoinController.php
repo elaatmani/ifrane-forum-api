@@ -46,7 +46,7 @@ class SessionJoinController extends Controller
         } else {
             // User is not attending, so join the session
             $session->users()->attach($user->id, [
-                'role' => 'attendant',
+                'role' => 'attendee',
                 'joined_at' => now()
             ]);
 
@@ -59,7 +59,7 @@ class SessionJoinController extends Controller
                 'session' => [
                     'id' => $session->id,
                     'name' => $session->name,
-                    'role' => 'attendant',
+                    'role' => 'attendee',
                     'joined_at' => now()->format('Y-m-d H:i:s'),
                     'action' => 'joined'
                 ]

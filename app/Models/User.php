@@ -70,7 +70,9 @@ class User extends Authenticatable
      */
     public function getProfileImageAttribute($value)
     {
-        if($value){
+        if($value && strpos($value, 'users') !== false){
+            return url($value);
+        } else if($value){
             return asset('storage/' . $value);
         }
 
@@ -178,7 +180,7 @@ class User extends Authenticatable
     public function sessions()
     {
         return $this->belongsToMany(Session::class)
-                    ->withPivot('role', 'joined_at')->where('role', 'attendant');
+                    ->withPivot('role', 'joined_at')->where('role', 'attendee');
     }
 
     /**

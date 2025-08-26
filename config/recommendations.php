@@ -75,12 +75,12 @@ return [
         |
         */
         'role_targeting' => [
-            'exhibitor' => ['buyer', 'attendant', 'sponsor'],
+            'exhibitor' => ['buyer', 'attendee', 'sponsor'],
             'buyer' => ['exhibitor', 'speaker'],
-            'attendant' => ['speaker', 'exhibitor', 'sponsor'],
-            'speaker' => ['attendant', 'sponsor', 'exhibitor'],
-            'sponsor' => ['exhibitor', 'speaker', 'attendant'],
-            'admin' => ['exhibitor', 'buyer', 'attendant', 'speaker', 'sponsor']
+            'attendee' => ['speaker', 'exhibitor', 'sponsor'],
+            'speaker' => ['attendee', 'sponsor', 'exhibitor'],
+            'sponsor' => ['exhibitor', 'speaker', 'attendee'],
+            'admin' => ['exhibitor', 'buyer', 'attendee', 'speaker', 'sponsor']
         ],
 
         /*

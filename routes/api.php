@@ -267,6 +267,8 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
     Route::group([ 'prefix' => 'companies' ], function() {
         Route::get('/', PublicCompanyListController::class);
         Route::get('/{id}', PublicCompanyShowController::class);
+        Route::get('/{id}/services', [PublicCompanyShowController::class, 'getCompanyServices']);
+        Route::get('/{id}/products', [PublicCompanyShowController::class, 'getCompanyProducts']);
     });
 
     // Roles 
