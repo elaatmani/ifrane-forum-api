@@ -25,7 +25,7 @@ class SessionStoreRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'status' => 'required|string|max:255',
-            'image' => 'nullable|image|max:1024',
+            'image' => 'nullable|image|max:2048',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'link' => 'required|string|max:255',

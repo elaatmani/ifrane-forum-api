@@ -268,7 +268,7 @@ Nuelink helps you organize, automate, analyze and manage your social media from 
                 'created_by' => 1, // Default created_by value
                 'streaming_platform' => $company['streaming_platform'],
                 'logo' => $company['logo'] ? 'assets/images/companies/' . $company['logo'] : $company['logo'],
-                'background_image' => $company['background_image'],
+                'background_image' => $company['background_image'] ? 'assets/images/companies/' . $company['background_image'] : $company['background_image'],
                 'address' => $company['address'],
                 'primary_phone' => $company['phone'],
                 'secondary_phone' => null, // Default null

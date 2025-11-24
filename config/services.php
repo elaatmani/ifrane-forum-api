@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'whereby' => [
+        'api_key' => env('WHEREBY_API_KEY'),
+        'subdomain' => env('WHEREBY_SUBDOMAIN'),
+    ],
+
 ];

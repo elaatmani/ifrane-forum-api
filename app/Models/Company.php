@@ -74,6 +74,10 @@ class Company extends Model
 
     public function getLogoAttribute($value)
     {
+        if($value && strpos($value, 'assets') !== false) {
+            return url($value);
+        }
+
         if($value && strpos($value, 'logos') !== false){
             return asset('storage/' . $value);
         } else if($value){
@@ -85,6 +89,10 @@ class Company extends Model
 
     public function getBackgroundImageAttribute($value)
     {
+        if($value && strpos($value, 'assets') !== false) {
+            return url($value);
+        }
+
         if($value && strpos($value, 'backgrounds') !== false){
             return asset('storage/' . $value);
         } else if($value){

@@ -47,6 +47,16 @@ class Conversation extends Model
         return $this->hasMany(Message::class);
     }
 
+    public function videoCallRooms()
+    {
+        return $this->hasMany(\App\Models\VideoCallRoom::class);
+    }
+
+    public function videoCalls()
+    {
+        return $this->hasMany(\App\Models\VideoCall::class);
+    }
+
 
 
     public function creator()

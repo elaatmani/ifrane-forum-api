@@ -21,9 +21,6 @@ class ProductListResource extends JsonResource
         }
 
         $company_logo_url = $this->company->logo;
-        if ($company_logo_url) {
-            $company_logo_url = asset('storage/' . $company_logo_url);
-        }
 
         return [
             'id' => $this->id,

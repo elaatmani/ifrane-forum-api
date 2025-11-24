@@ -87,6 +87,7 @@ use App\Http\Controllers\Product\ProductUpdateController as PublicProductUpdateC
 use App\Http\Controllers\Product\Admin\ProductEditController as AdminProductEditController;
 use App\Http\Controllers\Product\Admin\ProductListController as AdminProductListController;
 use App\Http\Controllers\Product\Admin\ProductShowController as AdminProductShowController;
+use App\Http\Controllers\Product\Admin\ProductStoreController as AdminProductStoreController;
 use App\Http\Controllers\Service\Admin\ServiceEditController as AdminServiceEditController;
 use App\Http\Controllers\Service\Admin\ServiceListController as AdminServiceListController;
 use App\Http\Controllers\Service\Admin\ServiceShowController as AdminServiceShowController;
@@ -193,6 +194,7 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
 
         Route::group([ 'prefix' => 'products' ], function() {
             Route::get('/', AdminProductListController::class);
+            Route::post('/', AdminProductStoreController::class);
             Route::get('/{id}', AdminProductShowController::class);
             Route::get('/{id}/edit', AdminProductEditController::class);
             Route::post('/{id}', AdminProductUpdateController::class);
@@ -355,6 +357,24 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         
         Route::delete('/messages/{message}', [App\Http\Controllers\API\MessageController::class, 'deleteMessage']);
         Route::get('/conversations/{conversation}/unread-count', [App\Http\Controllers\API\MessageController::class, 'getUnreadCount']);
+    });
+
+    // Video Calls
+    Route::group([ 'prefix' => 'video-calls' ], function() {
+        // Room Management
+        Route::post('/rooms', [App\Http\Controllers\API\VideoCallRoomController::class, 'store']);
+        Route::get('/rooms/{roomId}', [App\Http\Controllers\API\VideoCallRoomController::class, 'show']);
+        Route::post('/rooms/{roomId}/join', [App\Http\Controllers\API\VideoCallRoomController::class, 'join']);
+        Route::post('/rooms/{roomId}/leave', [App\Http\Controllers\API\VideoCallRoomController::class, 'leave']);
+        Route::post('/rooms/{roomId}/end', [App\Http\Controllers\API\VideoCallRoomController::class, 'end']);
+        Route::get('/rooms/{roomId}/participants', [App\Http\Controllers\API\VideoCallRoomController::class, 'participants']);
+        
+        // Call Management
+        Route::post('/calls/initiate', [App\Http\Controllers\API\VideoCallController::class, 'initiate']);
+        Route::post('/calls/{callId}/accept', [App\Http\Controllers\API\VideoCallController::class, 'accept']);
+        Route::post('/calls/{callId}/reject', [App\Http\Controllers\API\VideoCallController::class, 'reject']);
+        Route::post('/calls/{callId}/end', [App\Http\Controllers\API\VideoCallController::class, 'end']);
+        Route::get('/calls/{callId}', [App\Http\Controllers\API\VideoCallController::class, 'show']);
     });
     
 });

@@ -43,3 +43,24 @@ Broadcast::channel('user.{userId}.messages', function ($user, $userId) {
     // User can only listen to their own message notifications
     return (int) $user->id === (int) $userId;
 });
+
+// Video Call Channels
+Broadcast::channel('video-call.{id}', function ($user, $id) {
+    // Check if user is participant in the video call conversation
+    $videoCall = \App\Models\VideoCall::with('conversation')->find($id);
+    if (!$videoCall) {
+        return false;
+    }
+    
+    return $videoCall->conversation->users()->where('user_id', $user->id)->exists();
+});
+
+Broadcast::channel('video-call-room.{id}', function ($user, $id) {
+    // Check if user is participant in the video call room conversation
+    $room = \App\Models\VideoCallRoom::with('conversation')->find($id);
+    if (!$room) {
+        return false;
+    }
+    
+    return $room->conversation->users()->where('user_id', $user->id)->exists();
+});

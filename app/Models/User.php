@@ -70,7 +70,7 @@ class User extends Authenticatable
      */
     public function getProfileImageAttribute($value)
     {
-        if($value && strpos($value, 'users') !== false){
+        if($value && strpos($value, 'assets/images/users') !== false){
             return url($value);
         } else if($value){
             return asset('storage/' . $value);
@@ -340,6 +340,26 @@ class User extends Authenticatable
         return $this->belongsToMany(Conversation::class, 'conversation_users')
                     ->withPivot('last_read_at', 'joined_at')
                     ->withTimestamps();
+    }
+
+    public function videoCallRooms()
+    {
+        return $this->hasMany(\App\Models\VideoCallRoom::class, 'created_by');
+    }
+
+    public function initiatedVideoCalls()
+    {
+        return $this->hasMany(\App\Models\VideoCall::class, 'initiated_by');
+    }
+
+    public function acceptedVideoCalls()
+    {
+        return $this->hasMany(\App\Models\VideoCall::class, 'accepted_by');
+    }
+
+    public function videoCallParticipants()
+    {
+        return $this->hasMany(\App\Models\VideoCallParticipant::class);
     }
 
     /**
