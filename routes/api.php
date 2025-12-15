@@ -357,6 +357,7 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         
         Route::delete('/messages/{message}', [App\Http\Controllers\API\MessageController::class, 'deleteMessage']);
         Route::get('/conversations/{conversation}/unread-count', [App\Http\Controllers\API\MessageController::class, 'getUnreadCount']);
+        Route::get('/messages/unread-count', [App\Http\Controllers\API\MessageController::class, 'unreadCount']);
     });
 
     // Video Calls
@@ -375,6 +376,18 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::post('/calls/{callId}/reject', [App\Http\Controllers\API\VideoCallController::class, 'reject']);
         Route::post('/calls/{callId}/end', [App\Http\Controllers\API\VideoCallController::class, 'end']);
         Route::get('/calls/{callId}', [App\Http\Controllers\API\VideoCallController::class, 'show']);
+    });
+
+    // Meetings
+    Route::group(['prefix' => 'meetings'], function() {
+        Route::post('/member-to-member', [App\Http\Controllers\API\MeetingController::class, 'createMemberToMember']);
+        Route::post('/member-to-company', [App\Http\Controllers\API\MeetingController::class, 'createMemberToCompany']);
+        Route::get('/', [App\Http\Controllers\API\MeetingController::class, 'index']);
+        Route::get('/{meetingId}', [App\Http\Controllers\API\MeetingController::class, 'show']);
+        Route::post('/{meetingId}/accept', [App\Http\Controllers\API\MeetingController::class, 'accept']);
+        Route::post('/{meetingId}/decline', [App\Http\Controllers\API\MeetingController::class, 'decline']);
+        Route::post('/{meetingId}/start', [App\Http\Controllers\API\MeetingController::class, 'start']);
+        Route::post('/{meetingId}/complete', [App\Http\Controllers\API\MeetingController::class, 'complete']);
     });
     
 });

@@ -385,4 +385,25 @@ class MessageController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * Get the count of unread messages across all conversations.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unreadCount(): JsonResponse
+    {
+        try {
+            $count = $this->messagingService->getTotalUnreadCount(auth()->user());
+            
+            return response()->json([
+                'count' => $count
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
 } 

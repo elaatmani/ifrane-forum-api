@@ -393,4 +393,28 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'sender_id');
     }
+
+    public function organizedMeetings()
+    {
+        return $this->hasMany(Meeting::class, 'organizer_id');
+    }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class, 'user_id');
+    }
+
+    public function meetingParticipants()
+    {
+        return $this->hasMany(MeetingParticipant::class);
+    }
+
+    public function upcomingMeetings()
+    {
+        return $this->meetingParticipants()
+                    ->whereHas('meeting', function($query) {
+                        $query->where('scheduled_at', '>', now())
+                            ->whereIn('status', ['pending', 'accepted']);
+                    });
+    }
 }

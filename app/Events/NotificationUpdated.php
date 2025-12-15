@@ -33,7 +33,7 @@ class NotificationUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->notification->user_id)
+            new PrivateChannel('user.' . $this->notification->user_id . '.messages')
         ];
     }
 
@@ -54,8 +54,16 @@ class NotificationUpdated implements ShouldBroadcast
     {
         return [
             'id' => $this->notification->id,
+            'user_id' => $this->notification->user_id,
+            'title' => $this->notification->title,
+            'message' => $this->notification->message,
+            'notification_type' => $this->notification->notification_type,
+            'severity_type' => $this->notification->severity_type,
             'read_at' => $this->notification->read_at,
-            'unread' => $this->notification->isUnread()
+            'unread' => $this->notification->isUnread(),
+            'data' => $this->notification->data,
+            'created_at' => $this->notification->created_at,
+            'updated_at' => $this->notification->updated_at,
         ];
     }
 } 

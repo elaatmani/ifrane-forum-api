@@ -17,15 +17,17 @@ class UnreadCountUpdated implements ShouldBroadcast
     public $user;
     public $unreadCount;
     public $conversationId;
+    public $totalUnreadCount;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(User $user, int $unreadCount, ?string $conversationId = null)
+    public function __construct(User $user, int $unreadCount, ?string $conversationId = null, ?int $totalUnreadCount = null)
     {
         $this->user = $user;
         $this->unreadCount = $unreadCount;
         $this->conversationId = $conversationId;
+        $this->totalUnreadCount = $totalUnreadCount;
     }
 
     /**
@@ -55,11 +57,18 @@ class UnreadCountUpdated implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        return [
+        $data = [
             'user_id' => $this->user->id,
-            'unread_count' => $this->unreadCount,
+            'count' => $this->unreadCount,
             'conversation_id' => $this->conversationId,
             'updated_at' => now()->toISOString()
         ];
+
+        // Include total unread count if provided
+        if ($this->totalUnreadCount !== null) {
+            $data['total_unread_count'] = $this->totalUnreadCount;
+        }
+
+        return $data;
     }
 } 

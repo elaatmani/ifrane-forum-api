@@ -82,11 +82,17 @@ class MessagingService
     {
         $message = $this->messageRepository->sendMessage($conversation, $sender, $content, 'text');
         
+        // Mark conversation as read for the sender (since they sent the last message)
+        $this->messageRepository->markAsRead($conversation, $sender);
+        
         // Broadcast message event
         event(new MessageSent($message));
         
         // Broadcast conversation update
         event(new ConversationUpdated($conversation));
+        
+        // Broadcast unread count updates to all participants (including sender with 0 count)
+        $this->broadcastUnreadCountUpdates($conversation, $sender);
         
         return $message;
     }
@@ -105,10 +111,16 @@ class MessagingService
             $metadata
         );
         
+        // Mark conversation as read for the sender (since they sent the last message)
+        $this->messageRepository->markAsRead($conversation, $sender);
+        
         event(new MessageSent($message));
         
         // Broadcast conversation update
         event(new ConversationUpdated($conversation));
+        
+        // Broadcast unread count updates to all participants (including sender with 0 count)
+        $this->broadcastUnreadCountUpdates($conversation, $sender);
         
         return $message;
     }
@@ -127,10 +139,16 @@ class MessagingService
             $metadata
         );
         
+        // Mark conversation as read for the sender (since they sent the last message)
+        $this->messageRepository->markAsRead($conversation, $sender);
+        
         event(new MessageSent($message));
         
         // Broadcast conversation update
         event(new ConversationUpdated($conversation));
+        
+        // Broadcast unread count updates to all participants (including sender with 0 count)
+        $this->broadcastUnreadCountUpdates($conversation, $sender);
         
         return $message;
     }
@@ -149,10 +167,16 @@ class MessagingService
             $metadata
         );
         
+        // Mark conversation as read for the sender (since they sent the last message)
+        $this->messageRepository->markAsRead($conversation, $sender);
+        
         event(new MessageSent($message));
         
         // Broadcast conversation update
         event(new ConversationUpdated($conversation));
+        
+        // Broadcast unread count updates to all participants (including sender with 0 count)
+        $this->broadcastUnreadCountUpdates($conversation, $sender);
         
         return $message;
     }
@@ -171,10 +195,16 @@ class MessagingService
             $metadata
         );
         
+        // Mark conversation as read for the sender (since they sent the last message)
+        $this->messageRepository->markAsRead($conversation, $sender);
+        
         event(new MessageSent($message));
         
         // Broadcast conversation update
         event(new ConversationUpdated($conversation));
+        
+        // Broadcast unread count updates to all participants (including sender with 0 count)
+        $this->broadcastUnreadCountUpdates($conversation, $sender);
         
         return $message;
     }
@@ -193,10 +223,16 @@ class MessagingService
             $metadata
         );
         
+        // Mark conversation as read for the sender (since they sent the last message)
+        $this->messageRepository->markAsRead($conversation, $sender);
+        
         event(new MessageSent($message));
         
         // Broadcast conversation update
         event(new ConversationUpdated($conversation));
+        
+        // Broadcast unread count updates to all participants (including sender with 0 count)
+        $this->broadcastUnreadCountUpdates($conversation, $sender);
         
         return $message;
     }
@@ -215,10 +251,16 @@ class MessagingService
             $metadata
         );
         
+        // Mark conversation as read for the sender (since they sent the last message)
+        $this->messageRepository->markAsRead($conversation, $sender);
+        
         event(new MessageSent($message));
         
         // Broadcast conversation update
         event(new ConversationUpdated($conversation));
+        
+        // Broadcast unread count updates to all participants (including sender with 0 count)
+        $this->broadcastUnreadCountUpdates($conversation, $sender);
         
         return $message;
     }
@@ -262,11 +304,17 @@ class MessagingService
                 $filePath
             );
             
+            // Mark conversation as read for the sender (since they sent the last message)
+            $this->messageRepository->markAsRead($conversation, $sender);
+            
             // Broadcast message event
             event(new MessageSent($message));
             
             // Broadcast conversation update
             event(new ConversationUpdated($conversation));
+            
+            // Broadcast unread count updates to all participants (including sender with 0 count)
+            $this->broadcastUnreadCountUpdates($conversation, $sender);
             
             return $message;
             
@@ -308,11 +356,14 @@ class MessagingService
         $result = $this->messageRepository->markAsRead($conversation, $user);
         
         if ($result) {
-            // Get updated unread count
+            // Get updated unread count for this conversation
             $unreadCount = $this->getUnreadCount($conversation, $user);
             
-            // Broadcast unread count update
-            event(new UnreadCountUpdated($user, $unreadCount, $conversation->id));
+            // Get total unread count across all conversations
+            $totalUnreadCount = $this->getTotalUnreadCount($user);
+            
+            // Broadcast unread count update with total count
+            event(new UnreadCountUpdated($user, $unreadCount, $conversation->id, $totalUnreadCount));
             
             // Broadcast conversation update
             event(new ConversationUpdated($conversation));
@@ -327,6 +378,24 @@ class MessagingService
     public function getUnreadCount(Conversation $conversation, User $user): int
     {
         return $this->messageRepository->getUnreadCount($conversation, $user);
+    }
+
+    /**
+     * Get total unread messages count across all conversations for a user
+     */
+    public function getTotalUnreadCount(User $user): int
+    {
+        $totalUnread = 0;
+        
+        // Get all conversations where user is a participant
+        $conversations = $user->conversations()->get();
+        
+        // Sum unread counts from all conversations
+        foreach ($conversations as $conversation) {
+            $totalUnread += $this->getUnreadCount($conversation, $user);
+        }
+        
+        return $totalUnread;
     }
 
     /**
@@ -374,5 +443,26 @@ class MessagingService
     public function canUserAccessConversation(Conversation $conversation, User $user): bool
     {
         return $this->conversationRepository->isUserInConversation($conversation, $user);
+    }
+
+    /**
+     * Broadcast unread count updates to all participants of a conversation (including sender)
+     */
+    protected function broadcastUnreadCountUpdates(Conversation $conversation, User $sender): void
+    {
+        // Load conversation users
+        $conversation->load('users');
+        
+        // Broadcast to all participants (including sender)
+        foreach ($conversation->users as $participant) {
+            // Get unread count for this conversation
+            $unreadCount = $this->getUnreadCount($conversation, $participant);
+            
+            // Get total unread count across all conversations
+            $totalUnreadCount = $this->getTotalUnreadCount($participant);
+            
+            // Broadcast unread count update with total count
+            event(new UnreadCountUpdated($participant, $unreadCount, $conversation->id, $totalUnreadCount));
+        }
     }
 } 

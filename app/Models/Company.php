@@ -101,4 +101,16 @@ class Company extends Model
 
         return null;
     }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class, 'company_id');
+    }
+
+    public function upcomingMeetings()
+    {
+        return $this->meetings()
+                    ->where('scheduled_at', '>', now())
+                    ->whereIn('status', ['pending', 'accepted']);
+    }
 }
