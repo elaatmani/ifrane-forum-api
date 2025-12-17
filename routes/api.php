@@ -18,6 +18,7 @@ use App\Http\Controllers\MyEshow\MyEshowController;
 use App\Http\Controllers\User\UserActiveController;
 use App\Http\Controllers\User\UserByRoleController;
 use App\Http\Controllers\User\UserDeleteController;
+use App\Http\Controllers\User\UserSendEmailController;
 use App\Http\Controllers\User\UserUpdateController;
 use App\Http\Controllers\Auth\ActAsCompanyController;
 use App\Http\Controllers\Company\MyCompanyController;
@@ -278,6 +279,7 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::get('/{id}', UserShowController::class);
         Route::post('/{id}', UserUpdateController::class);
         Route::post('/{id}/active', UserActiveController::class);
+        Route::post('/{id}/emails/send', UserSendEmailController::class);
         Route::delete('/{id}', UserDeleteController::class);
     });
 
