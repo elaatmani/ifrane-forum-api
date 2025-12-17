@@ -21,6 +21,10 @@ use App\Http\Controllers\User\UserDeleteController;
 use App\Http\Controllers\User\UserUpdateController;
 use App\Http\Controllers\Auth\ActAsCompanyController;
 use App\Http\Controllers\Company\MyCompanyController;
+use App\Http\Controllers\Company\MyCompanyContactsController;
+use App\Http\Controllers\Company\MyCompanyMeetingsController;
+use App\Http\Controllers\Company\MyCompanyMembersController;
+use App\Http\Controllers\Company\MyCompanyStatsController;
 use App\Http\Controllers\Dashboard\OverviewController;
 use App\Http\Controllers\Service\ServiceEditController;
 use App\Http\Controllers\Service\ServiceListController;
@@ -113,6 +117,11 @@ use App\Http\Controllers\Session\Admin\SessionUpdateController as AdminSessionUp
 |
 */
 
+// Public auth endpoints
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/request-reset-password', \App\Http\Controllers\Auth\RequestResetPasswordController::class);
+    Route::post('/reset-password/validate', \App\Http\Controllers\Auth\ValidateResetPasswordTokenController::class);
+});
 
 
 Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() {
@@ -155,6 +164,13 @@ Route::group([ 'middleware' => [ 'auth:sanctum', 'check.status' ] ], function() 
         Route::get('/companies', MyCompanyController::class);
         Route::post('/act-as-company/{company_id}', ActAsCompanyController::class);
         Route::post('/stop-acting-as-company', StopActingAsCompanyController::class);
+    });
+
+    Route::group([ 'prefix' => 'my-company' ], function() {
+        Route::get('/contacts', MyCompanyContactsController::class);
+        Route::get('/meetings', MyCompanyMeetingsController::class);
+        Route::get('/members', MyCompanyMembersController::class);
+        Route::get('/stats', MyCompanyStatsController::class);
     });
 
     Route::group([ 'prefix' => 'my-eshow' ], function() {

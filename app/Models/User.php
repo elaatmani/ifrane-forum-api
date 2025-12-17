@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Bookmarkable;
+use App\Services\NotificationService;
 
 class User extends Authenticatable
 {
@@ -116,6 +117,16 @@ class User extends Authenticatable
     public function bookmarkedProducts()
     {
         return $this->bookmarks()->where('bookmarkable_type', Product::class);
+    }
+
+    /**
+     * Override default password reset notification to use branded email.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        /** @var NotificationService $notificationService */
+        $notificationService = app(NotificationService::class);
+        $notificationService->sendPasswordResetEmail($this, $token);
     }
 
     public function bookmarkedServices()

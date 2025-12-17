@@ -17,6 +17,8 @@ class MeetingParticipant extends Model
         'status',
         'invited_at',
         'responded_at',
+        'reminder_sent_at',
+        'reminder_offset_minutes',
         'joined_at',
         'left_at',
         'notes',
@@ -26,6 +28,7 @@ class MeetingParticipant extends Model
     protected $casts = [
         'invited_at' => 'datetime',
         'responded_at' => 'datetime',
+        'reminder_sent_at' => 'datetime',
         'joined_at' => 'datetime',
         'left_at' => 'datetime',
         'metadata' => 'array',

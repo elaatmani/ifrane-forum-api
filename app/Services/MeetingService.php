@@ -85,6 +85,10 @@ class MeetingService
                 $otherUser,
                 $meeting
             );
+            $this->notificationService->sendMeetingInvitationEmail(
+                $otherUser,
+                $meeting
+            );
 
             return $meeting;
 
@@ -145,6 +149,10 @@ class MeetingService
 
                 // Send notification to each company representative
                 $this->notificationService->sendMeetingInvitation(
+                    $user,
+                    $meeting
+                );
+                $this->notificationService->sendMeetingInvitationEmail(
                     $user,
                     $meeting
                 );

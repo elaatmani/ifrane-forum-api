@@ -2,10 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\User;
+use App\Mail\MeetingInvitationMail;
+use App\Mail\MeetingReminderMail;
+use App\Mail\PasswordResetMail;
+use App\Mail\WelcomeMail;
 use App\Models\Meeting;
+use App\Models\User;
 use App\Notifications\SystemNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 
 class NotificationService
 {
@@ -28,6 +34,48 @@ class NotificationService
             return true;
         } catch (\Exception $e) {
             Log::error('Failed to send system notification: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Send welcome email if enabled via config.
+     */
+    public function sendWelcomeEmail(User $user): bool
+    {
+        if (!config('mail-branding.send_welcome')) {
+            return false;
+        }
+
+        try {
+            // Generate password reset token for "Get Started" link
+            $token = Password::broker()->createToken($user);
+            
+            // Create reset URL in the same format as password reset emails
+            $frontend = rtrim(env('FRONTEND_URL', config('app.url')), '/');
+            $resetUrl = $frontend . '/reset-password?token=' . $token . '&email=' . urlencode($user->email);
+            
+            Mail::to($user->email)->queue(new WelcomeMail($user->name, $resetUrl));
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to send welcome email: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Send password reset email with custom template.
+     */
+    public function sendPasswordResetEmail(User $user, string $token): bool
+    {
+        try {
+            $frontend = rtrim(env('FRONTEND_URL', config('app.url')), '/');
+            $resetUrl = $frontend . '/reset-password?token=' . $token . '&email=' . urlencode($user->email);
+
+            Mail::to($user->email)->queue(new PasswordResetMail($user->name, $resetUrl));
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to send password reset email: ' . $e->getMessage());
             return false;
         }
     }
@@ -92,6 +140,21 @@ class NotificationService
             return true;
         } catch (\Exception $e) {
             Log::error('Failed to send meeting invitation notification: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Send meeting invitation email.
+     */
+    public function sendMeetingInvitationEmail(User $user, Meeting $meeting): bool
+    {
+        try {
+            $url = url("/meetings/{$meeting->id}");
+            Mail::to($user->email)->queue(new MeetingInvitationMail($meeting, $user->name, $url));
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to send meeting invitation email: ' . $e->getMessage());
             return false;
         }
     }
@@ -301,6 +364,21 @@ class NotificationService
             return true;
         } catch (\Exception $e) {
             Log::error('Failed to send meeting started notification: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Send meeting reminder email.
+     */
+    public function sendMeetingReminderEmail(User $user, Meeting $meeting, ?string $joinUrl = null): bool
+    {
+        try {
+            $joinUrl = $joinUrl ?: url("/meetings/{$meeting->id}");
+            Mail::to($user->email)->queue(new MeetingReminderMail($meeting, $user->name, $joinUrl));
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to send meeting reminder email: ' . $e->getMessage());
             return false;
         }
     }

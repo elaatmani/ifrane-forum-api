@@ -12,9 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:sync-google-sheet')->everyTenMinutes();
-        $schedule->command('app:check-low-stock-products')->dailyAt('02:00');
-        $schedule->command('app:check-losing-products')->dailyAt('03:00');
+        $schedule->command('meetings:send-reminders')->everyFiveMinutes();
     }
 
     /**

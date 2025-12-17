@@ -26,6 +26,17 @@ class UserObserver
                 'user_email' => $user->email
             ]);
             
+            // Send welcome email if enabled
+            try {
+                app(\App\Services\NotificationService::class)->sendWelcomeEmail($user);
+            } catch (\Exception $e) {
+                Log::error("Failed to send welcome email", [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+            
         } catch (\Exception $e) {
             // Log error but don't fail user creation
             Log::error("Failed to create profile for user", [
